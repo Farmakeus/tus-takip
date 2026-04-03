@@ -3,182 +3,182 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 // ===================== DATA =====================
 const temelBranslar = [
   {
-    id: "anatomi", name: "Anatomi", icon: "\u{1F9B4}", soruSayisi: 13,
-    donemler: ["2026 Mart", "2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl."],
+    id: "anatomi", name: "Anatomi", icon: "🦴", soruSayisi: 13,
+    donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Kemikler", dagilim: [1, 0, 3, 1, 0, 1] },
       { name: "Eklemler", dagilim: [0, 1, 0, 0, 0, 0] },
       { name: "Kaslar", dagilim: [2, 1, 2, 3, 2, 3] },
       { name: "Solunum Sistemi", dagilim: [2, 1, 1, 1, 2, 1] },
-      { name: "Dola\u015f\u0131m Sistemi", dagilim: [3, 3, 0, 2, 1, 1] },
+      { name: "Dolaşım Sistemi", dagilim: [3, 3, 0, 2, 1, 1] },
       { name: "Gastrointestinal Sistem", dagilim: [2, 3, 2, 1, 1, 1] },
-      { name: "\u00dcrogenital Sistem", dagilim: [1, 1, 1, 1, 2, 1] },
-      { name: "N\u00f6roanatomi", dagilim: [2, 3, 4, 4, 5, 5] },
+      { name: "Ürogenital Sistem", dagilim: [1, 1, 1, 1, 2, 1] },
+      { name: "Nöroanatomi", dagilim: [2, 3, 4, 4, 5, 5] },
     ],
   },
   {
-    id: "fizyoloji", name: "Fizyoloji", icon: "\u26a1", soruSayisi: 15,
-    donemler: ["2026 Mart", "2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl."],
+    id: "fizyoloji", name: "Fizyoloji", icon: "⚡", soruSayisi: 15,
+    donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
-      { name: "H\u00fccre", dagilim: [1, 2, 2, 1, 2, 0] },
+      { name: "Hücre", dagilim: [1, 2, 2, 1, 2, 0] },
       { name: "Doku", dagilim: [2, 2, 2, 2, 2, 3] },
       { name: "Kas", dagilim: [1, 1, 1, 1, 1, 0] },
       { name: "Genital Sistem ve Genel Embriyoloji", dagilim: [2, 3, 2, 2, 3, 2] },
       { name: "Hemopoetik Sistem", dagilim: [0, 1, 0, 1, 0, 0] },
       { name: "Gastrointestinal Sistem", dagilim: [2, 2, 1, 0, 1, 2] },
-      { name: "Kardiyovask\u00fcler Sistem", dagilim: [2, 1, 3, 1, 1, 1] },
+      { name: "Kardiyovasküler Sistem", dagilim: [2, 1, 3, 1, 1, 1] },
       { name: "Endokrin Sistem", dagilim: [1, 0, 1, 2, 1, 1] },
       { name: "Solunum Sistemi", dagilim: [0, 1, 1, 1, 1, 1] },
       { name: "Sinir Sistemi", dagilim: [3, 2, 2, 3, 2, 3] },
-      { name: "\u00dcriner Sistem", dagilim: [1, 0, 0, 1, 1, 2] },
+      { name: "Üriner Sistem", dagilim: [1, 0, 0, 1, 1, 2] },
     ],
   },
   {
-    id: "biyokimya", name: "Biyokimya", icon: "\u{1F9EA}", soruSayisi: 18,
-    donemler: ["2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
+    id: "biyokimya", name: "Biyokimya", icon: "🧪", soruSayisi: 18,
+    donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
-      { name: "H\u00fccre ve Organeller", dagilim: [0, 0, 0, 0, 1, 1] },
+      { name: "Hücre ve Organeller", dagilim: [0, 0, 0, 0, 1, 1] },
       { name: "Metabolizma", dagilim: [1, 0, 0, 0, 1, 2] },
       { name: "Karbonhidratlar", dagilim: [3, 3, 2, 2, 3, 2] },
       { name: "Lipitler", dagilim: [2, 3, 2, 6, 2, 5] },
       { name: "Aminoasitler ve Proteinler", dagilim: [7, 8, 8, 8, 6, 7] },
-      { name: "N\u00fckleik Asitler", dagilim: [1, 1, 1, 1, 2, 2] },
+      { name: "Nükleik Asitler", dagilim: [1, 1, 1, 1, 2, 2] },
       { name: "Vitaminler ve Mineraller", dagilim: [2, 1, 2, 0, 0, 1] },
       { name: "Hormonlar", dagilim: [2, 2, 3, 1, 3, 2] },
     ],
   },
   {
-    id: "mikrobiyoloji", name: "Mikrobiyoloji", icon: "\u{1F9A0}", soruSayisi: 18,
-    donemler: ["2026 Mart", "2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl."],
+    id: "mikrobiyoloji", name: "Mikrobiyoloji", icon: "🦠", soruSayisi: 18,
+    donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Temel Mikrobiyoloji", dagilim: [3, 2, 3, 4, 4, 2] },
       { name: "Bakteriyoloji", dagilim: [6, 8, 6, 5, 6, 7] },
       { name: "Parazitoloji", dagilim: [2, 2, 2, 2, 2, 2] },
       { name: "Mikoloji", dagilim: [3, 2, 2, 3, 2, 2] },
       { name: "Viroloji", dagilim: [2, 3, 3, 2, 3, 3] },
-      { name: "\u0130mmunoloji", dagilim: [2, 1, 2, 2, 1, 2] },
+      { name: "İmmunoloji", dagilim: [2, 1, 2, 2, 1, 2] },
     ],
   },
   {
-    id: "patoloji", name: "Patoloji", icon: "\u{1F52C}", soruSayisi: 18,
-    donemler: ["2026 Mart", "2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl."],
+    id: "patoloji", name: "Patoloji", icon: "🔬", soruSayisi: 18,
+    donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
-      { name: "H\u00fccre", dagilim: [1, 1, 2, 1, 2, 3] },
-      { name: "\u0130nflamasyon", dagilim: [1, 1, 0, 1, 0, 1] },
-      { name: "\u0130mmun Sistem", dagilim: [1, 1, 3, 0, 0, 1] },
-      { name: "Onar\u0131m ve Yara \u0130yile\u015fmesi", dagilim: [1, 0, 1, 0, 0, 1] },
-      { name: "Hemodinamik Hastal\u0131klar", dagilim: [1, 0, 0, 2, 0, 1] },
+      { name: "Hücre", dagilim: [1, 1, 2, 1, 2, 3] },
+      { name: "İnflamasyon", dagilim: [1, 1, 0, 1, 0, 1] },
+      { name: "İmmun Sistem", dagilim: [1, 1, 3, 0, 0, 1] },
+      { name: "Onarım ve Yara İyileşmesi", dagilim: [1, 0, 1, 0, 0, 1] },
+      { name: "Hemodinamik Hastalıklar", dagilim: [1, 0, 0, 2, 0, 1] },
       { name: "Neoplazi", dagilim: [2, 3, 0, 2, 2, 1] },
       { name: "Solunum Sistemi", dagilim: [2, 0, 1, 2, 1, 1] },
-      { name: "Kardiyovask\u00fcler Sistem", dagilim: [0, 1, 1, 1, 1, 0] },
+      { name: "Kardiyovasküler Sistem", dagilim: [0, 1, 1, 1, 1, 0] },
       { name: "Hemopoetik Sistem", dagilim: [1, 1, 1, 0, 1, 0] },
       { name: "Gastrointestinal Sistem", dagilim: [2, 1, 2, 1, 2, 3] },
       { name: "Hepatobilier Sistem", dagilim: [1, 0, 1, 1, 2, 0] },
-      { name: "\u00dcriner Sistem", dagilim: [1, 1, 0, 1, 2, 2] },
+      { name: "Üriner Sistem", dagilim: [1, 1, 0, 1, 2, 2] },
       { name: "Endokrin Sistem", dagilim: [0, 2, 1, 0, 0, 0] },
-      { name: "Kad\u0131n Genital Sistemi", dagilim: [1, 1, 1, 0, 2, 1] },
+      { name: "Kadın Genital Sistemi", dagilim: [1, 1, 1, 0, 2, 1] },
       { name: "Erkek Genital Sistemi", dagilim: [1, 1, 1, 1, 0, 0] },
-      { name: "Meme Hastal\u0131klar\u0131", dagilim: [1, 1, 1, 2, 0, 1] },
+      { name: "Meme Hastalıkları", dagilim: [1, 1, 1, 2, 0, 1] },
       { name: "Sinir Sistemi", dagilim: [0, 1, 0, 0, 0, 0] },
-      { name: "Kas \u0130skelet Sistemi", dagilim: [0, 1, 1, 2, 2, 1] },
-      { name: "Deri Hastal\u0131klar\u0131", dagilim: [1, 1, 1, 1, 1, 1] },
+      { name: "Kas İskelet Sistemi", dagilim: [0, 1, 1, 2, 2, 1] },
+      { name: "Deri Hastalıkları", dagilim: [1, 1, 1, 1, 1, 1] },
     ],
   },
   {
-    id: "farmakoloji", name: "Farmakoloji", icon: "\u{1F48A}", soruSayisi: 18,
-    donemler: ["2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
+    id: "farmakoloji", name: "Farmakoloji", icon: "💊", soruSayisi: 18,
+    donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Genel Farmakoloji", dagilim: [1, 1, 1, 2, 2, 3] },
       { name: "Otonom Sinir Sistemi", dagilim: [2, 1, 1, 1, 2, 2] },
       { name: "Santral Sinir Sistemi", dagilim: [3, 3, 3, 4, 3, 3] },
-      { name: "Kardiyovask\u00fcler Sistem", dagilim: [2, 2, 2, 1, 2, 3] },
+      { name: "Kardiyovasküler Sistem", dagilim: [2, 2, 2, 1, 2, 3] },
       { name: "Solunum Sistemi", dagilim: [1, 0, 0, 0, 1, 0] },
       { name: "Gastrointestinal Sistem", dagilim: [0, 2, 2, 0, 1, 2] },
       { name: "Endokrin Sistem", dagilim: [4, 2, 3, 3, 2, 2] },
       { name: "Otakoidler", dagilim: [0, 1, 0, 0, 0, 0] },
-      { name: "NSA\u0130\u0130", dagilim: [0, 0, 0, 1, 0, 1] },
+      { name: "NSAİİ", dagilim: [0, 0, 0, 1, 0, 1] },
       { name: "Kemoterapotikler", dagilim: [3, 5, 5, 5, 5, 5] },
       { name: "Toksikoloji", dagilim: [2, 1, 1, 1, 0, 1] },
     ],
   },
-  { id: "histoloji", name: "Histoloji ve Embriyoloji", icon: "\u{1F9EB}", soruSayisi: 8 },
-  { id: "tibbigenetik", name: "T\u0131bbi Genetik", icon: "\u{1F9EC}", soruSayisi: 5 },
-  { id: "biyoistatistik", name: "Biyoistatistik", icon: "\u{1F4CA}", soruSayisi: 5 },
-  { id: "tibbiekoloji", name: "T\u0131bbi Ekoloji", icon: "\u{1F33F}", soruSayisi: 3 },
-  { id: "tibbietik", name: "T\u0131bbi Etik / Deontoloji", icon: "\u2696\ufe0f", soruSayisi: 3 },
+  { id: "histoloji", name: "Histoloji ve Embriyoloji", icon: "🧫", soruSayisi: 8 },
+  { id: "tibbigenetik", name: "Tıbbi Genetik", icon: "🧬", soruSayisi: 5 },
+  { id: "biyoistatistik", name: "Biyoistatistik", icon: "📊", soruSayisi: 5 },
+  { id: "tibbiekoloji", name: "Tıbbi Ekoloji", icon: "🌿", soruSayisi: 3 },
+  { id: "tibbietik", name: "Tıbbi Etik / Deontoloji", icon: "⚖️", soruSayisi: 3 },
 ];
 
 const klinikBranslar = [
   {
-    id: "dahiliye", name: "\u0130\u00e7 Hastal\u0131klar\u0131", icon: "\u{1F3E5}", soruSayisi: 23,
-    donemler: ["2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
+    id: "dahiliye", name: "İç Hastalıkları", icon: "🏥", soruSayisi: 23,
+    donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Hematoloji", dagilim: [1, 2, 2, 2, 2, 2] },
       { name: "Onkoloji", dagilim: [1, 2, 2, 2, 2, 2] },
       { name: "Nefroloji", dagilim: [2, 2, 2, 2, 2, 3] },
       { name: "Kardiyoloji", dagilim: [3, 3, 3, 2, 3, 4] },
-      { name: "G\u00f6\u011f\u00fcs Hastal\u0131klar\u0131", dagilim: [2, 2, 2, 3, 2, 3] },
+      { name: "Göğüs Hastalıkları", dagilim: [2, 2, 2, 3, 2, 3] },
       { name: "Gastroenteroloji", dagilim: [2, 0, 2, 2, 0, 2] },
       { name: "Hepatoloji", dagilim: [3, 3, 1, 1, 3, 2] },
       { name: "Endokrin", dagilim: [2, 2, 2, 2, 2, 3] },
       { name: "Romatoloji", dagilim: [3, 2, 2, 2, 2, 2] },
-      { name: "Enfeksiyon Hastal\u0131klar\u0131", dagilim: [3, 3, 3, 3, 3, 4] },
-      { name: "Allerji-\u0130mmunoloji", dagilim: [0, 1, 1, 1, 1, 1] },
+      { name: "Enfeksiyon Hastalıkları", dagilim: [3, 3, 3, 3, 3, 4] },
+      { name: "Allerji-İmmunoloji", dagilim: [0, 1, 1, 1, 1, 1] },
       { name: "Geriatri", dagilim: [1, 1, 1, 1, 1, 1] },
     ],
   },
   {
-    id: "cerrrahi", name: "Genel Cerrahi", icon: "\u{1F52A}", soruSayisi: 18,
-    donemler: ["2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
+    id: "cerrrahi", name: "Genel Cerrahi", icon: "🔪", soruSayisi: 18,
+    donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Temel Cerrahi", dagilim: [5, 7, 7, 5, 5, 7] },
-      { name: "Meme Hastal\u0131klar\u0131", dagilim: [2, 2, 2, 2, 2, 2] },
-      { name: "Tiroid Hastal\u0131klar\u0131", dagilim: [1, 1, 2, 0, 2, 1] },
-      { name: "Paratiroid Hastal\u0131klar\u0131", dagilim: [1, 1, 0, 0, 0, 0] },
-      { name: "Adrenal Bez Hastal\u0131klar\u0131", dagilim: [0, 0, 0, 2, 0, 1] },
-      { name: "\u00d6zefagus", dagilim: [1, 1, 0, 0, 0, 1] },
+      { name: "Meme Hastalıkları", dagilim: [2, 2, 2, 2, 2, 2] },
+      { name: "Tiroid Hastalıkları", dagilim: [1, 1, 2, 0, 2, 1] },
+      { name: "Paratiroid Hastalıkları", dagilim: [1, 1, 0, 0, 0, 0] },
+      { name: "Adrenal Bez Hastalıkları", dagilim: [0, 0, 0, 2, 0, 1] },
+      { name: "Özefagus", dagilim: [1, 1, 0, 0, 0, 1] },
       { name: "Mide", dagilim: [1, 2, 3, 1, 1, 1] },
-      { name: "\u0130nce Barsak", dagilim: [2, 0, 0, 2, 1, 2] },
+      { name: "İnce Barsak", dagilim: [2, 0, 0, 2, 1, 2] },
       { name: "Kolorektal", dagilim: [1, 1, 1, 2, 3, 0] },
       { name: "Appendiks", dagilim: [0, 0, 0, 0, 0, 1] },
-      { name: "Anal Kanal ve Perianal B\u00f6lge", dagilim: [0, 0, 0, 0, 1, 1] },
-      { name: "Karaci\u011fer", dagilim: [2, 0, 1, 2, 1, 2] },
+      { name: "Anal Kanal ve Perianal Bölge", dagilim: [0, 0, 0, 0, 1, 1] },
+      { name: "Karaciğer", dagilim: [2, 0, 1, 2, 1, 2] },
       { name: "Safra Yolu ve Safra Kesesi", dagilim: [1, 1, 1, 1, 1, 2] },
       { name: "Pankreas", dagilim: [1, 1, 1, 1, 2, 1] },
       { name: "Dalak", dagilim: [1, 1, 1, 1, 1, 1] },
     ],
   },
   {
-    id: "pediatri", name: "Pediatri", icon: "\u{1F476}", soruSayisi: 25,
-    donemler: ["2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
+    id: "pediatri", name: "Pediatri", icon: "👶", soruSayisi: 25,
+    donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
-      { name: "Yenido\u011fan", dagilim: [3, 2, 2, 2, 2, 3] },
+      { name: "Yenidoğan", dagilim: [3, 2, 2, 2, 2, 3] },
       { name: "Genetik", dagilim: [0, 0, 2, 1, 1, 1] },
-      { name: "B\u00fcy\u00fcme ve Geli\u015fme", dagilim: [0, 2, 2, 1, 1, 2] },
+      { name: "Büyüme ve Gelişme", dagilim: [0, 2, 2, 1, 1, 2] },
       { name: "Beslenme", dagilim: [1, 1, 1, 0, 1, 1] },
       { name: "Gastroenteroloji ve Hepatoloji", dagilim: [2, 1, 1, 2, 1, 2] },
-      { name: "N\u00f6roloji", dagilim: [2, 0, 2, 2, 2, 3] },
+      { name: "Nöroloji", dagilim: [2, 0, 2, 2, 2, 3] },
       { name: "Kardiyoloji", dagilim: [1, 2, 3, 3, 3, 2] },
-      { name: "G\u00f6\u011f\u00fcs Hastal\u0131klar\u0131", dagilim: [2, 1, 1, 1, 2, 1] },
-      { name: "D\u00f6k\u00fcnt\u00fcl\u00fc Hastal\u0131klar", dagilim: [1, 0, 0, 0, 1, 0] },
-      { name: "Ba\u011f\u0131\u015f\u0131klama", dagilim: [1, 0, 1, 0, 1, 4] },
+      { name: "Göğüs Hastalıkları", dagilim: [2, 1, 1, 1, 2, 1] },
+      { name: "Döküntülü Hastalıklar", dagilim: [1, 0, 0, 0, 1, 0] },
+      { name: "Bağışıklama", dagilim: [1, 0, 1, 0, 1, 4] },
       { name: "Allerji", dagilim: [0, 1, 1, 1, 0, 1] },
-      { name: "\u0130mmunoloji", dagilim: [1, 2, 1, 1, 1, 0] },
-      { name: "Enfeksiyon Hastal\u0131klar\u0131", dagilim: [0, 2, 1, 1, 0, 0] },
+      { name: "İmmunoloji", dagilim: [1, 2, 1, 1, 1, 0] },
+      { name: "Enfeksiyon Hastalıkları", dagilim: [0, 2, 1, 1, 0, 0] },
       { name: "Endokrinoloji", dagilim: [1, 2, 1, 1, 1, 2] },
-      { name: "Metabolik Hastal\u0131klar", dagilim: [1, 2, 1, 2, 1, 1] },
+      { name: "Metabolik Hastalıklar", dagilim: [1, 2, 1, 2, 1, 1] },
       { name: "Hematoloji", dagilim: [1, 0, 0, 2, 2, 1] },
       { name: "Onkoloji", dagilim: [2, 2, 1, 1, 0, 2] },
       { name: "Nefroloji", dagilim: [3, 2, 1, 1, 2, 1] },
       { name: "Romatoloji", dagilim: [1, 1, 1, 1, 1, 1] },
-      { name: "Acil T\u0131p, Zehirlenmeler ve Yo\u011fun Bak\u0131m", dagilim: [1, 1, 1, 1, 2, 1] },
-      { name: "\u00c7ocuk Psikiyatrisi", dagilim: [1, 1, 1, 1, 0, 1] },
-      { name: "\u00c7ocuk Cerrahisi", dagilim: [0, 0, 0, 0, 0, 0] },
+      { name: "Acil Tıp, Zehirlenmeler ve Yoğun Bakım", dagilim: [1, 1, 1, 1, 2, 1] },
+      { name: "Çocuk Psikiyatrisi", dagilim: [1, 1, 1, 1, 0, 1] },
+      { name: "Çocuk Cerrahisi", dagilim: [0, 0, 0, 0, 0, 0] },
     ],
   },
   {
-    id: "kadinDogum", name: "Kad\u0131n Hastal\u0131klar\u0131 ve Do\u011fum", icon: "\u{1F930}", soruSayisi: 10,
-    donemler: ["2026 Mart", "2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl."],
+    id: "kadinDogum", name: "Kadın Hastalıkları ve Doğum", icon: "🤰", soruSayisi: 10,
+    donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Jinekoloji", dagilim: [2, 1, 1, 1, 3, 2] },
       { name: "Endokrinoloji", dagilim: [3, 3, 3, 2, 2, 4] },
@@ -187,41 +187,41 @@ const klinikBranslar = [
     ],
   },
   {
-    id: "kucukStajlar", name: "K\u00fc\u00e7\u00fck Stajlar", icon: "\u{1F3EB}", soruSayisi: 22,
-    donemler: ["2026 Mart", "2025 A\u011f.", "2025 Mart", "2024 A\u011f.", "2024 Mart", "2023 Eyl."],
+    id: "kucukStajlar", name: "Küçük Stajlar", icon: "🏫", soruSayisi: 22,
+    donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
-      { name: "N\u00f6roloji", dagilim: [3, 2, 3, 3, 1, 2] },
+      { name: "Nöroloji", dagilim: [3, 2, 3, 3, 1, 2] },
       { name: "Beyin Cerrahisi", dagilim: [1, 1, 2, 1, 2, 1] },
       { name: "Psikiyatri", dagilim: [2, 2, 2, 1, 2, 2] },
-      { name: "Halk Sa\u011fl\u0131\u011f\u0131", dagilim: [1, 1, 1, 1, 1, 1] },
+      { name: "Halk Sağlığı", dagilim: [1, 1, 1, 1, 1, 1] },
       { name: "Dermatoloji", dagilim: [2, 2, 2, 2, 2, 2] },
       { name: "Radyoloji", dagilim: [2, 1, 1, 1, 1, 1] },
-      { name: "N\u00fckleer T\u0131p", dagilim: [0, 1, 1, 1, 1, 1] },
+      { name: "Nükleer Tıp", dagilim: [0, 1, 1, 1, 1, 1] },
       { name: "KBB", dagilim: [1, 1, 1, 2, 1, 1] },
-      { name: "G\u00f6z Hastal\u0131klar\u0131", dagilim: [1, 1, 1, 1, 1, 1] },
+      { name: "Göz Hastalıkları", dagilim: [1, 1, 1, 1, 1, 1] },
       { name: "Ortopedi", dagilim: [1, 2, 2, 1, 2, 1] },
       { name: "FTR", dagilim: [1, 2, 0, 2, 0, 1] },
-      { name: "\u00dcroloji", dagilim: [0, 1, 1, 1, 1, 1] },
-      { name: "\u00c7ocuk Cerrahisi", dagilim: [1, 1, 1, 1, 1, 1] },
+      { name: "Üroloji", dagilim: [0, 1, 1, 1, 1, 1] },
+      { name: "Çocuk Cerrahisi", dagilim: [1, 1, 1, 1, 1, 1] },
       { name: "Kalp Damar Cerrahisi", dagilim: [1, 1, 1, 2, 2, 1] },
-      { name: "G\u00f6\u011f\u00fcs Cerrahisi", dagilim: [1, 0, 1, 0, 1, 1] },
+      { name: "Göğüs Cerrahisi", dagilim: [1, 0, 1, 0, 1, 1] },
       { name: "Plastik Cerrahi", dagilim: [1, 0, 0, 0, 0, 0] },
       { name: "Anestezi", dagilim: [1, 1, 1, 1, 1, 1] },
-      { name: "Acil T\u0131p ve Zehirlenmeler", dagilim: [2, 2, 1, 1, 2, 3] },
-      { name: "Adli T\u0131p", dagilim: [0, 0, 0, 0, 0, 0] },
+      { name: "Acil Tıp ve Zehirlenmeler", dagilim: [2, 2, 1, 1, 2, 3] },
+      { name: "Adli Tıp", dagilim: [0, 0, 0, 0, 0, 0] },
     ],
   },
 ];
 
 const tumBranslar = [
-  ...temelBranslar.map(b => ({ ...b, kategori: "Temel T\u0131p" })),
-  ...klinikBranslar.map(b => ({ ...b, kategori: "Klinik T\u0131p" })),
+  ...temelBranslar.map(b => ({ ...b, kategori: "Temel Tıp" })),
+  ...klinikBranslar.map(b => ({ ...b, kategori: "Klinik Tıp" })),
 ];
 
 // All branslar that have konular (subtopics)
 const branslarWithKonular = tumBranslar.filter(b => b.konular && b.konular.length > 0);
 
-const haftaGunleri = ["Pazartesi", "Sal\u0131", "\u00c7ar\u015famba", "Per\u015fembe", "Cuma", "Cumartesi", "Pazar"];
+const haftaGunleri = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
 
 // ===================== HELPERS =====================
 const LS_KEY = "tus_takip_data";
@@ -318,32 +318,32 @@ const oldRemovedBransIds = [
 
 // ===================== STYLES =====================
 const colors = {
-  bg: "#0f172a",
-  card: "#1e293b",
-  cardHover: "#334155",
-  primary: "#3b82f6",
-  primaryHover: "#2563eb",
-  success: "#10b981",
-  warning: "#f59e0b",
-  danger: "#ef4444",
-  text: "#f1f5f9",
-  textMuted: "#94a3b8",
-  border: "#334155",
-  inputBg: "#0f172a",
-  temel: "#8b5cf6",
-  klinik: "#06b6d4",
+  bg: "#f0f4f0",
+  card: "#ffffff",
+  cardHover: "#e8f0e8",
+  primary: "#2e7d32",
+  primaryHover: "#1b5e20",
+  success: "#388e3c",
+  warning: "#f57f17",
+  danger: "#c62828",
+  text: "#1a2e1a",
+  textMuted: "#5a7a5a",
+  border: "#c8d8c8",
+  inputBg: "#f5f9f5",
+  temel: "#00695c",
+  klinik: "#1565c0",
 };
 
 const baseStyles = {
   container: {
     minHeight: "100vh",
-    background: `linear-gradient(135deg, ${colors.bg} 0%, #1a1a2e 100%)`,
+    background: `linear-gradient(135deg, #f0f4f0 0%, #e8f0e8 100%)`,
     color: colors.text,
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     padding: "0",
   },
   header: {
-    background: "linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%)",
+    background: "linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #43a047 100%)",
     padding: "20px 24px",
     borderBottom: `1px solid ${colors.border}`,
     position: "sticky",
@@ -359,13 +359,13 @@ const baseStyles = {
     fontSize: 26,
     fontWeight: 800,
     margin: 0,
-    background: "linear-gradient(135deg, #60a5fa, #a78bfa)",
+    background: "linear-gradient(135deg, #43a047, #81c784)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   },
   subtitle: {
     fontSize: 13,
-    color: colors.textMuted,
+    color: "#ffffffcc",
     margin: "4px 0 0",
   },
   nav: {
@@ -374,6 +374,8 @@ const baseStyles = {
     marginTop: 16,
     overflowX: "auto",
     paddingBottom: 4,
+    WebkitOverflowScrolling: "touch",
+    scrollbarWidth: "thin",
   },
   navBtn: (active) => ({
     padding: "8px 16px",
@@ -382,8 +384,8 @@ const baseStyles = {
     cursor: "pointer",
     fontSize: 13,
     fontWeight: 600,
-    background: active ? colors.primary : "transparent",
-    color: active ? "#fff" : colors.textMuted,
+    background: active ? "rgba(255,255,255,0.25)" : "transparent",
+    color: active ? "#fff" : "#ffffffaa",
     transition: "all 0.2s",
     whiteSpace: "nowrap",
   }),
@@ -489,6 +491,7 @@ const baseStyles = {
     padding: 16,
     borderRadius: 10,
     background: colors.inputBg,
+    minWidth: 100,
   },
   statValue: {
     fontSize: 28,
@@ -512,6 +515,7 @@ const baseStyles = {
     width: "100%",
     borderCollapse: "collapse",
     fontSize: 13,
+    minWidth: 500,
   },
   th: {
     textAlign: "left",
@@ -520,16 +524,21 @@ const baseStyles = {
     color: colors.textMuted,
     fontWeight: 600,
     fontSize: 12,
+    whiteSpace: "nowrap",
   },
   td: {
     padding: "10px 12px",
     borderBottom: `1px solid ${colors.border}22`,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    maxWidth: 200,
   },
 };
 
 // ===================== MINI CHART (SVG Bar) =====================
 function MiniBarChart({ data, height = 120, barColor = colors.primary }) {
-  if (!data || data.length === 0) return <div style={{ color: colors.textMuted, fontSize: 13 }}>Hen\u00fcz veri yok</div>;
+  if (!data || data.length === 0) return <div style={{ color: colors.textMuted, fontSize: 13 }}>Henüz veri yok</div>;
   const max = Math.max(...data.map(d => d.value), 1);
   const barW = Math.min(32, Math.floor(280 / data.length) - 4);
   const w = data.length * (barW + 4);
@@ -550,7 +559,7 @@ function MiniBarChart({ data, height = 120, barColor = colors.primary }) {
 }
 
 function MiniLineChart({ data, height = 100, color = colors.primary }) {
-  if (!data || data.length < 2) return <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 2 veri noktas\u0131 gerekli</div>;
+  if (!data || data.length < 2) return <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 2 veri noktası gerekli</div>;
   const max = Math.max(...data.map(d => d.value), 1);
   const min = Math.min(...data.map(d => d.value), 0);
   const range = max - min || 1;
@@ -591,22 +600,22 @@ function Dashboard({ data, setData }) {
   return (
     <div>
       {/* Countdown */}
-      <div style={{ ...baseStyles.card, background: "linear-gradient(135deg, #1e3a5f 0%, #2d1b69 100%)", textAlign: "center", padding: 32 }}>
-        <div style={{ fontSize: 14, color: colors.textMuted, marginBottom: 8 }}>TUS S\u0131nav\u0131na Kalan</div>
-        <div style={{ fontSize: 56, fontWeight: 900, background: kalan <= 30 ? "linear-gradient(135deg, #ef4444, #f59e0b)" : "linear-gradient(135deg, #60a5fa, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          {kalan > 0 ? kalan : 0} G\u00fcn
+      <div style={{ ...baseStyles.card, background: "linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)", textAlign: "center", padding: 32 }}>
+        <div style={{ fontSize: 14, color: "#ffffffcc", marginBottom: 8 }}>TUS Sınavına Kalan</div>
+        <div style={{ fontSize: 56, fontWeight: 900, background: kalan <= 30 ? "linear-gradient(135deg, #c62828, #f57f17)" : "linear-gradient(135deg, #43a047, #81c784)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          {kalan > 0 ? kalan : 0} Gün
         </div>
-        <div style={{ fontSize: 13, color: colors.textMuted, marginTop: 4 }}>
+        <div style={{ fontSize: 13, color: "#ffffffcc", marginTop: 4 }}>
           Hedef: {formatDate(data.sinavTarihi)} | Hedef Puan: {data.hedefPuan}
         </div>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 16 }}>
-          <label style={{ fontSize: 12, color: colors.textMuted }}>
-            S\u0131nav Tarihi:
-            <input type="date" value={data.sinavTarihi} onChange={e => setData(d => ({ ...d, sinavTarihi: e.target.value }))} style={{ ...baseStyles.input, width: 150, marginLeft: 6 }} />
+          <label style={{ fontSize: 12, color: "#ffffffcc" }}>
+            Sınav Tarihi:
+            <input type="date" value={data.sinavTarihi} onChange={e => setData(d => ({ ...d, sinavTarihi: e.target.value }))} style={{ ...baseStyles.input, width: 150, marginLeft: 6, color: "#fff", background: "rgba(255,255,255,0.15)", borderColor: "rgba(255,255,255,0.3)" }} />
           </label>
-          <label style={{ fontSize: 12, color: colors.textMuted }}>
+          <label style={{ fontSize: 12, color: "#ffffffcc" }}>
             Hedef Puan:
-            <input type="number" value={data.hedefPuan} min={0} max={100} onChange={e => setData(d => ({ ...d, hedefPuan: Number(e.target.value) }))} style={{ ...baseStyles.input, width: 80, marginLeft: 6 }} />
+            <input type="number" value={data.hedefPuan} min={0} max={100} onChange={e => setData(d => ({ ...d, hedefPuan: Number(e.target.value) }))} style={{ ...baseStyles.input, width: 80, marginLeft: 6, color: "#fff", background: "rgba(255,255,255,0.15)", borderColor: "rgba(255,255,255,0.3)" }} />
           </label>
         </div>
       </div>
@@ -614,12 +623,12 @@ function Dashboard({ data, setData }) {
       {/* Stat Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 16 }}>
         {[
-          { label: "\u00c7\u00f6z\u00fclen Soru", value: toplamSoru, color: colors.primary },
-          { label: "Ba\u015far\u0131 Oran\u0131", value: `%${basariOrani}`, color: colors.success },
+          { label: "Çözülen Soru", value: toplamSoru, color: colors.primary },
+          { label: "Başarı Oranı", value: `%${basariOrani}`, color: colors.success },
           { label: "Toplam Net", value: hesaplaNet(toplamDogru, toplamYanlis).toFixed(1), color: colors.warning },
-          { label: "Deneme Say\u0131s\u0131", value: data.denemeler.length, color: "#a78bfa" },
-          { label: "Konu \u0130lerlemesi", value: `${tamamlananKonuSayisi}/${toplamKonu}`, color: colors.klinik },
-          { label: "\u00c7al\u0131\u015fma S\u00fcresi", value: `${saatStr} sa`, color: "#f472b6" },
+          { label: "Deneme Sayısı", value: data.denemeler.length, color: "#43a047" },
+          { label: "Konu İlerlemesi", value: `${tamamlananKonuSayisi}/${toplamKonu}`, color: colors.klinik },
+          { label: "Çalışma Süresi", value: `${saatStr} sa`, color: "#66bb6a" },
         ].map((s, i) => (
           <div key={i} style={baseStyles.statBox}>
             <div style={{ ...baseStyles.statValue, color: s.color }}>{s.value}</div>
@@ -645,7 +654,7 @@ function Dashboard({ data, setData }) {
       {/* Konu Ilerlemesi Ozet */}
       <div style={baseStyles.grid2}>
         <div style={baseStyles.card}>
-          <div style={baseStyles.cardTitle}><span style={{ color: colors.temel }}>&#9632;</span> Temel T\u0131p \u0130lerlemesi</div>
+          <div style={baseStyles.cardTitle}><span style={{ color: colors.temel }}>&#9632;</span> Temel Tıp İlerlemesi</div>
           {temelBranslar.map(b => {
             const pct = getBransProgress(b, data.konuDurumlari);
             const c = getBransProgressColor(pct);
@@ -662,7 +671,7 @@ function Dashboard({ data, setData }) {
           })}
         </div>
         <div style={baseStyles.card}>
-          <div style={baseStyles.cardTitle}><span style={{ color: colors.klinik }}>&#9632;</span> Klinik T\u0131p \u0130lerlemesi</div>
+          <div style={baseStyles.cardTitle}><span style={{ color: colors.klinik }}>&#9632;</span> Klinik Tıp İlerlemesi</div>
           {klinikBranslar.map(b => {
             const pct = getBransProgress(b, data.konuDurumlari);
             const c = getBransProgressColor(pct);
@@ -688,10 +697,10 @@ function KonuTakibi({ data, setData }) {
   const [expandedBrans, setExpandedBrans] = useState({});
 
   const durumlar = [
-    { id: "baslanmadi", label: "Ba\u015flanmad\u0131", color: colors.textMuted },
+    { id: "baslanmadi", label: "Başlanmadı", color: colors.textMuted },
     { id: "devam", label: "Devam Ediyor", color: colors.warning },
-    { id: "tekrar", label: "Tekrar A\u015famas\u0131nda", color: colors.klinik },
-    { id: "tamamlandi", label: "Tamamland\u0131", color: colors.success },
+    { id: "tekrar", label: "Tekrar Aşamasında", color: colors.klinik },
+    { id: "tamamlandi", label: "Tamamlandı", color: colors.success },
   ];
 
   const setDurum = (key, durum) => {
@@ -737,7 +746,7 @@ function KonuTakibi({ data, setData }) {
                 <div style={{ flex: 1, minWidth: 140 }}>
                   <div style={{ fontWeight: 600, fontSize: 14 }}>{b.name}</div>
                   <div style={{ fontSize: 11, color: colors.textMuted }}>
-                    Soru pay\u0131: ~{b.soruSayisi}
+                    Soru payı: ~{b.soruSayisi}
                     {hasKonular && ` | ${b.konular.length} alt konu`}
                   </div>
                 </div>
@@ -784,12 +793,12 @@ function KonuTakibi({ data, setData }) {
                       <div key={ki} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 16px 6px 52px", flexWrap: "wrap" }}>
                         <div style={{ flex: 1, minWidth: 160 }}>
                           <div style={{ fontSize: 13, fontWeight: 500 }}>{k.name}</div>
-                          <div style={{ fontSize: 10, color: colors.textMuted }}>Ort: {avg.toFixed(1)} soru/s\u0131nav</div>
+                          <div style={{ fontSize: 10, color: colors.textMuted }}>Ort: {avg.toFixed(1)} soru/sınav</div>
                         </div>
                         {/* High yield indicator */}
                         {avg >= 2.5 && (
                           <span style={{ ...baseStyles.badge(colors.warning), fontSize: 9, padding: "1px 6px" }}>
-                            Y\u00fcksek Verim
+                            Yüksek Verim
                           </span>
                         )}
                         <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
@@ -838,8 +847,8 @@ function KonuTakibi({ data, setData }) {
           </div>
         ))}
       </div>
-      {renderBransGrubu("Temel T\u0131p Bilimleri", temelBranslar, colors.temel)}
-      {renderBransGrubu("Klinik T\u0131p Bilimleri", klinikBranslar, colors.klinik)}
+      {renderBransGrubu("Temel Tıp Bilimleri", temelBranslar, colors.temel)}
+      {renderBransGrubu("Klinik Tıp Bilimleri", klinikBranslar, colors.klinik)}
     </div>
   );
 }
@@ -853,10 +862,10 @@ function SoruDagilimi() {
   const getHeatmapColor = (value, maxVal) => {
     if (value === 0) return "transparent";
     const intensity = Math.min(1, value / Math.max(maxVal, 1));
-    // Blue-purple gradient
-    const r = Math.round(59 + intensity * (139 - 59));
-    const g = Math.round(130 + intensity * (92 - 130));
-    const b_val = Math.round(246 + intensity * (246 - 246));
+    // Green gradient
+    const r = Math.round(46 + intensity * (27 - 46));
+    const g = Math.round(125 + intensity * (94 - 125));
+    const b_val = Math.round(50 + intensity * (32 - 50));
     const alpha = 0.15 + intensity * 0.7;
     return `rgba(${r}, ${g}, ${b_val}, ${alpha})`;
   };
@@ -871,7 +880,7 @@ function SoruDagilimi() {
     <div>
       {/* Brans Selector */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Soru Da\u011f\u0131l\u0131m\u0131 - Bran\u015f Se\u00e7imi</div>
+        <div style={baseStyles.cardTitle}>Soru Dağılımı - Branş Seçimi</div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {branslarWithKonular.map(b => (
             <button
@@ -894,7 +903,7 @@ function SoruDagilimi() {
       {/* Heatmap Table */}
       <div style={baseStyles.card}>
         <div style={baseStyles.cardTitle}>
-          {brans.icon} {brans.name} - S\u0131nav D\u00f6nemi Soru Da\u011f\u0131l\u0131m\u0131
+          {brans.icon} {brans.name} - Sınav Dönemi Soru Dağılımı
         </div>
         <div style={{ overflowX: "auto" }}>
           <table style={{ ...baseStyles.table, minWidth: 600 }}>
@@ -985,7 +994,7 @@ function SoruDagilimi() {
 
       {/* High Yield Summary */}
       <div style={baseStyles.card}>
-        <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Y\u00fcksek Verimli Konular (Ort. \u2265 2.5 soru)</div>
+        <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Yüksek Verimli Konular (Ort. ≥ 2.5 soru)</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {brans.konular
             .filter(k => ortalama(k.dagilim) >= 2.5)
@@ -1004,7 +1013,7 @@ function SoruDagilimi() {
             ))
           }
           {brans.konular.filter(k => ortalama(k.dagilim) >= 2.5).length === 0 && (
-            <div style={{ color: colors.textMuted, fontSize: 13 }}>Bu bran\u015fta y\u00fcksek verimli konu bulunmuyor</div>
+            <div style={{ color: colors.textMuted, fontSize: 13 }}>Bu branşta yüksek verimli konu bulunmuyor</div>
           )}
         </div>
       </div>
@@ -1051,15 +1060,15 @@ function SoruCozumu({ data, setData }) {
     <div>
       {/* Form */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Soru \u00c7\u00f6z\u00fcm\u00fc Ekle</div>
+        <div style={baseStyles.cardTitle}>Soru Çözümü Ekle</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
           <div>
-            <label style={baseStyles.label}>Bran\u015f</label>
+            <label style={baseStyles.label}>Branş</label>
             <select value={form.bransId} onChange={e => setForm(f => ({ ...f, bransId: e.target.value, konuAdi: "" }))} style={baseStyles.select}>
-              <optgroup label="Temel T\u0131p">
+              <optgroup label="Temel Tıp">
                 {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
               </optgroup>
-              <optgroup label="Klinik T\u0131p">
+              <optgroup label="Klinik Tıp">
                 {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
               </optgroup>
             </select>
@@ -1068,7 +1077,7 @@ function SoruCozumu({ data, setData }) {
             <div>
               <label style={baseStyles.label}>Alt Konu</label>
               <select value={form.konuAdi} onChange={e => setForm(f => ({ ...f, konuAdi: e.target.value }))} style={baseStyles.select}>
-                <option value="">Genel / T\u00fcm\u00fc</option>
+                <option value="">Genel / Tümü</option>
                 {selectedBrans.konular.map((k, i) => (
                   <option key={i} value={k.name}>{k.name}</option>
                 ))}
@@ -1080,20 +1089,20 @@ function SoruCozumu({ data, setData }) {
             <input type="date" value={form.tarih} onChange={e => setForm(f => ({ ...f, tarih: e.target.value }))} style={baseStyles.input} />
           </div>
           <div>
-            <label style={baseStyles.label}>Do\u011fru</label>
+            <label style={baseStyles.label}>Doğru</label>
             <input type="number" min={0} value={form.dogru} onChange={e => setForm(f => ({ ...f, dogru: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
           <div>
-            <label style={baseStyles.label}>Yanl\u0131\u015f</label>
+            <label style={baseStyles.label}>Yanlış</label>
             <input type="number" min={0} value={form.yanlis} onChange={e => setForm(f => ({ ...f, yanlis: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
           <div>
-            <label style={baseStyles.label}>Bo\u015f</label>
+            <label style={baseStyles.label}>Boş</label>
             <input type="number" min={0} value={form.bos} onChange={e => setForm(f => ({ ...f, bos: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
           <div>
             <label style={baseStyles.label}>Kaynak</label>
-            <input type="text" value={form.kaynak} onChange={e => setForm(f => ({ ...f, kaynak: e.target.value }))} style={baseStyles.input} placeholder="Tusdata, \u00d6SYM..." />
+            <input type="text" value={form.kaynak} onChange={e => setForm(f => ({ ...f, kaynak: e.target.value }))} style={baseStyles.input} placeholder="Tusdata, ÖSYM..." />
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
@@ -1106,22 +1115,22 @@ function SoruCozumu({ data, setData }) {
 
       {/* Son 7 gun grafigi */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Son 7 G\u00fcn Soru \u00c7\u00f6z\u00fcm\u00fc</div>
+        <div style={baseStyles.cardTitle}>Son 7 Gün Soru Çözümü</div>
         <MiniBarChart data={son7} barColor={colors.primary} />
       </div>
 
       {/* Kayitlar */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Soru \u00c7\u00f6z\u00fcm Kay\u0131tlar\u0131 ({data.soruCozumleri.length})</div>
+        <div style={baseStyles.cardTitle}>Soru Çözüm Kayıtları ({data.soruCozumleri.length})</div>
         {data.soruCozumleri.length === 0 ? (
-          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Hen\u00fcz soru \u00e7\u00f6z\u00fcm\u00fc eklenmedi</div>
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz soru çözümü eklenmedi</div>
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={baseStyles.table}>
               <thead>
                 <tr>
                   <th style={baseStyles.th}>Tarih</th>
-                  <th style={baseStyles.th}>Bran\u015f</th>
+                  <th style={baseStyles.th}>Branş</th>
                   <th style={baseStyles.th}>Konu</th>
                   <th style={baseStyles.th}>D</th>
                   <th style={baseStyles.th}>Y</th>
@@ -1144,7 +1153,7 @@ function SoruCozumu({ data, setData }) {
                       <td style={{ ...baseStyles.td, color: colors.textMuted }}>{s.bos || 0}</td>
                       <td style={{ ...baseStyles.td, fontWeight: 700 }}>{s.net.toFixed(1)}</td>
                       <td style={{ ...baseStyles.td, color: colors.textMuted }}>{s.kaynak || "-"}</td>
-                      <td style={baseStyles.td}><button onClick={() => sil(s.id)} style={baseStyles.deleteBtn}>\u00d7</button></td>
+                      <td style={baseStyles.td}><button onClick={() => sil(s.id)} style={baseStyles.deleteBtn}>×</button></td>
                     </tr>
                   );
                 })}
@@ -1210,7 +1219,7 @@ function Denemeler({ data, setData }) {
         <div style={baseStyles.cardTitle}>Deneme Sonucu Ekle</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
           <div>
-            <label style={baseStyles.label}>Deneme Ad\u0131</label>
+            <label style={baseStyles.label}>Deneme Adı</label>
             <input type="text" value={form.ad} onChange={e => setForm(f => ({ ...f, ad: e.target.value }))} style={baseStyles.input} placeholder="Deneme 1" />
           </div>
           <div>
@@ -1218,19 +1227,19 @@ function Denemeler({ data, setData }) {
             <input type="date" value={form.tarih} onChange={e => setForm(f => ({ ...f, tarih: e.target.value }))} style={baseStyles.input} />
           </div>
           <div>
-            <label style={baseStyles.label}>Temel Do\u011fru</label>
+            <label style={baseStyles.label}>Temel Doğru</label>
             <input type="number" min={0} max={120} value={form.temelDogru} onChange={e => setForm(f => ({ ...f, temelDogru: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
           <div>
-            <label style={baseStyles.label}>Temel Yanl\u0131\u015f</label>
+            <label style={baseStyles.label}>Temel Yanlış</label>
             <input type="number" min={0} max={120} value={form.temelYanlis} onChange={e => setForm(f => ({ ...f, temelYanlis: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
           <div>
-            <label style={baseStyles.label}>Klinik Do\u011fru</label>
+            <label style={baseStyles.label}>Klinik Doğru</label>
             <input type="number" min={0} max={120} value={form.klinikDogru} onChange={e => setForm(f => ({ ...f, klinikDogru: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
           <div>
-            <label style={baseStyles.label}>Klinik Yanl\u0131\u015f</label>
+            <label style={baseStyles.label}>Klinik Yanlış</label>
             <input type="number" min={0} max={120} value={form.klinikYanlis} onChange={e => setForm(f => ({ ...f, klinikYanlis: e.target.value }))} style={baseStyles.input} placeholder="0" />
           </div>
         </div>
@@ -1248,7 +1257,7 @@ function Denemeler({ data, setData }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12, marginBottom: 16 }}>
         <div style={baseStyles.statBox}>
           <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.success }}>{enIyi.toFixed(1)}</div>
-          <div style={baseStyles.statLabel}>En \u0130yi Net</div>
+          <div style={baseStyles.statLabel}>En İyi Net</div>
         </div>
         <div style={baseStyles.statBox}>
           <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.primary }}>{sonNet.toFixed(1)}</div>
@@ -1259,7 +1268,7 @@ function Denemeler({ data, setData }) {
           <div style={baseStyles.statLabel}>Ortalama</div>
         </div>
         <div style={baseStyles.statBox}>
-          <div style={{ ...baseStyles.statValue, fontSize: 24, color: "#a78bfa" }}>{data.denemeler.length}</div>
+          <div style={{ ...baseStyles.statValue, fontSize: 24, color: "#43a047" }}>{data.denemeler.length}</div>
           <div style={baseStyles.statLabel}>Deneme</div>
         </div>
       </div>
@@ -1267,16 +1276,16 @@ function Denemeler({ data, setData }) {
       {/* Chart */}
       {lineData.length >= 2 && (
         <div style={baseStyles.card}>
-          <div style={baseStyles.cardTitle}>Net \u0130lerleme Grafi\u011fi</div>
+          <div style={baseStyles.cardTitle}>Net İlerleme Grafiği</div>
           <MiniLineChart data={lineData} color={colors.success} />
         </div>
       )}
 
       {/* Tablo */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Deneme Sonu\u00e7lar\u0131</div>
+        <div style={baseStyles.cardTitle}>Deneme Sonuçları</div>
         {data.denemeler.length === 0 ? (
-          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Hen\u00fcz deneme eklenmedi</div>
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz deneme eklenmedi</div>
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={baseStyles.table}>
@@ -1298,7 +1307,7 @@ function Denemeler({ data, setData }) {
                     <td style={{ ...baseStyles.td, color: colors.temel, fontWeight: 600 }}>{d.temelNet.toFixed(1)}</td>
                     <td style={{ ...baseStyles.td, color: colors.klinik, fontWeight: 600 }}>{d.klinikNet.toFixed(1)}</td>
                     <td style={{ ...baseStyles.td, color: colors.success, fontWeight: 700, fontSize: 15 }}>{d.toplamNet.toFixed(1)}</td>
-                    <td style={baseStyles.td}><button onClick={() => sil(d.id)} style={baseStyles.deleteBtn}>\u00d7</button></td>
+                    <td style={baseStyles.td}><button onClick={() => sil(d.id)} style={baseStyles.deleteBtn}>×</button></td>
                   </tr>
                 ))}
               </tbody>
@@ -1343,27 +1352,27 @@ function CalismePlani({ data, setData }) {
     <div>
       {/* Ekleme Formu */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Haftal\u0131k Plan Ekle</div>
+        <div style={baseStyles.cardTitle}>Haftalık Plan Ekle</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
           <div>
-            <label style={baseStyles.label}>G\u00fcn</label>
+            <label style={baseStyles.label}>Gün</label>
             <select value={form.gun} onChange={e => setForm(f => ({ ...f, gun: e.target.value }))} style={baseStyles.select}>
               {haftaGunleri.map(g => <option key={g} value={g}>{g}</option>)}
             </select>
           </div>
           <div>
-            <label style={baseStyles.label}>Bran\u015f</label>
+            <label style={baseStyles.label}>Branş</label>
             <select value={form.bransId} onChange={e => setForm(f => ({ ...f, bransId: e.target.value }))} style={baseStyles.select}>
-              <optgroup label="Temel T\u0131p">
+              <optgroup label="Temel Tıp">
                 {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
               </optgroup>
-              <optgroup label="Klinik T\u0131p">
+              <optgroup label="Klinik Tıp">
                 {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
               </optgroup>
             </select>
           </div>
           <div>
-            <label style={baseStyles.label}>S\u00fcre (dk)</label>
+            <label style={baseStyles.label}>Süre (dk)</label>
             <input type="number" min={15} step={15} value={form.sure} onChange={e => setForm(f => ({ ...f, sure: e.target.value }))} style={baseStyles.input} />
           </div>
           <div>
@@ -1386,7 +1395,7 @@ function CalismePlani({ data, setData }) {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{gun}</div>
                 <span style={baseStyles.badge(topSure > 0 ? colors.primary : colors.textMuted)}>
-                  {topSure > 0 ? `${(topSure / 60).toFixed(1)} sa` : "Bo\u015f"}
+                  {topSure > 0 ? `${(topSure / 60).toFixed(1)} sa` : "Boş"}
                 </span>
               </div>
               {items.length === 0 ? (
@@ -1398,9 +1407,9 @@ function CalismePlani({ data, setData }) {
                     <span style={{ fontSize: 14 }}>{b?.icon}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 12, fontWeight: 600 }}>{b?.name}</div>
-                      <div style={{ fontSize: 10, color: colors.textMuted }}>{item.sure} dk {item.not ? `\u00b7 ${item.not}` : ""}</div>
+                      <div style={{ fontSize: 10, color: colors.textMuted }}>{item.sure} dk {item.not ? `· ${item.not}` : ""}</div>
                     </div>
-                    <button onClick={() => sil(gun, item.id)} style={baseStyles.deleteBtn}>\u00d7</button>
+                    <button onClick={() => sil(gun, item.id)} style={baseStyles.deleteBtn}>×</button>
                   </div>
                 );
               })}
@@ -1445,15 +1454,15 @@ function CalismaKaydi({ data, setData }) {
   return (
     <div>
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>\u00c7al\u0131\u015fma Kayd\u0131 Ekle</div>
+        <div style={baseStyles.cardTitle}>Çalışma Kaydı Ekle</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
           <div>
-            <label style={baseStyles.label}>Bran\u015f</label>
+            <label style={baseStyles.label}>Branş</label>
             <select value={form.bransId} onChange={e => setForm(f => ({ ...f, bransId: e.target.value }))} style={baseStyles.select}>
-              <optgroup label="Temel T\u0131p">
+              <optgroup label="Temel Tıp">
                 {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
               </optgroup>
-              <optgroup label="Klinik T\u0131p">
+              <optgroup label="Klinik Tıp">
                 {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
               </optgroup>
             </select>
@@ -1463,12 +1472,12 @@ function CalismaKaydi({ data, setData }) {
             <input type="date" value={form.tarih} onChange={e => setForm(f => ({ ...f, tarih: e.target.value }))} style={baseStyles.input} />
           </div>
           <div>
-            <label style={baseStyles.label}>S\u00fcre (dk)</label>
+            <label style={baseStyles.label}>Süre (dk)</label>
             <input type="number" min={5} step={5} value={form.sure} onChange={e => setForm(f => ({ ...f, sure: e.target.value }))} style={baseStyles.input} />
           </div>
           <div>
             <label style={baseStyles.label}>Not</label>
-            <input type="text" value={form.not} onChange={e => setForm(f => ({ ...f, not: e.target.value }))} style={baseStyles.input} placeholder="Konu detay\u0131..." />
+            <input type="text" value={form.not} onChange={e => setForm(f => ({ ...f, not: e.target.value }))} style={baseStyles.input} placeholder="Konu detayı..." />
           </div>
         </div>
         <div style={{ marginTop: 12, textAlign: "right" }}>
@@ -1477,22 +1486,22 @@ function CalismaKaydi({ data, setData }) {
       </div>
 
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Son 7 G\u00fcn \u00c7al\u0131\u015fma (saat)</div>
+        <div style={baseStyles.cardTitle}>Son 7 Gün Çalışma (saat)</div>
         <MiniBarChart data={son7} height={100} />
       </div>
 
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>\u00c7al\u0131\u015fma Kay\u0131tlar\u0131 ({data.calismaKayitlari.length})</div>
+        <div style={baseStyles.cardTitle}>Çalışma Kayıtları ({data.calismaKayitlari.length})</div>
         {data.calismaKayitlari.length === 0 ? (
-          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Hen\u00fcz kay\u0131t yok</div>
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz kayıt yok</div>
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={baseStyles.table}>
               <thead>
                 <tr>
                   <th style={baseStyles.th}>Tarih</th>
-                  <th style={baseStyles.th}>Bran\u015f</th>
-                  <th style={baseStyles.th}>S\u00fcre</th>
+                  <th style={baseStyles.th}>Branş</th>
+                  <th style={baseStyles.th}>Süre</th>
                   <th style={baseStyles.th}>Not</th>
                   <th style={baseStyles.th}></th>
                 </tr>
@@ -1506,7 +1515,7 @@ function CalismaKaydi({ data, setData }) {
                       <td style={baseStyles.td}>{b ? `${b.icon} ${b.name}` : c.bransId}</td>
                       <td style={baseStyles.td}>{c.sure} dk</td>
                       <td style={{ ...baseStyles.td, color: colors.textMuted }}>{c.not || "-"}</td>
-                      <td style={baseStyles.td}><button onClick={() => sil(c.id)} style={baseStyles.deleteBtn}>\u00d7</button></td>
+                      <td style={baseStyles.td}><button onClick={() => sil(c.id)} style={baseStyles.deleteBtn}>×</button></td>
                     </tr>
                   );
                 })}
@@ -1568,32 +1577,32 @@ function Analiz({ data }) {
       {/* Guclu/Zayif Yonler */}
       <div style={baseStyles.grid2}>
         <div style={baseStyles.card}>
-          <div style={{ ...baseStyles.cardTitle, color: colors.success }}>En G\u00fc\u00e7l\u00fc Bran\u015flar</div>
+          <div style={{ ...baseStyles.cardTitle, color: colors.success }}>En Güçlü Branşlar</div>
           {enGuclu.length === 0 ? (
-            <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 10 soru \u00e7\u00f6z\u00fclm\u00fc\u015f bran\u015f gerekli</div>
+            <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 10 soru çözülmüş branş gerekli</div>
           ) : enGuclu.map((b, i) => (
             <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, padding: "8px 10px", background: colors.inputBg, borderRadius: 8 }}>
               <span style={{ fontSize: 18, fontWeight: 800, color: colors.success, width: 24 }}>#{i + 1}</span>
               <span style={{ fontSize: 16 }}>{b.icon}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>{b.name}</div>
-                <div style={{ fontSize: 11, color: colors.textMuted }}>{b.topSoru} soru \u00b7 {b.net.toFixed(1)} net</div>
+                <div style={{ fontSize: 11, color: colors.textMuted }}>{b.topSoru} soru · {b.net.toFixed(1)} net</div>
               </div>
               <span style={{ fontWeight: 700, color: colors.success }}>%{b.basari.toFixed(0)}</span>
             </div>
           ))}
         </div>
         <div style={baseStyles.card}>
-          <div style={{ ...baseStyles.cardTitle, color: colors.danger }}>En Zay\u0131f Bran\u015flar</div>
+          <div style={{ ...baseStyles.cardTitle, color: colors.danger }}>En Zayıf Branşlar</div>
           {enZayif.length === 0 ? (
-            <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 10 soru \u00e7\u00f6z\u00fclm\u00fc\u015f bran\u015f gerekli</div>
+            <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 10 soru çözülmüş branş gerekli</div>
           ) : enZayif.map((b, i) => (
             <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, padding: "8px 10px", background: colors.inputBg, borderRadius: 8 }}>
               <span style={{ fontSize: 18, fontWeight: 800, color: colors.danger, width: 24 }}>#{i + 1}</span>
               <span style={{ fontSize: 16 }}>{b.icon}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>{b.name}</div>
-                <div style={{ fontSize: 11, color: colors.textMuted }}>{b.topSoru} soru \u00b7 {b.net.toFixed(1)} net</div>
+                <div style={{ fontSize: 11, color: colors.textMuted }}>{b.topSoru} soru · {b.net.toFixed(1)} net</div>
               </div>
               <span style={{ fontWeight: 700, color: colors.danger }}>%{b.basari.toFixed(0)}</span>
             </div>
@@ -1603,20 +1612,20 @@ function Analiz({ data }) {
 
       {/* Brans Detay */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Bran\u015f Bazl\u0131 Detayl\u0131 Analiz</div>
+        <div style={baseStyles.cardTitle}>Branş Bazlı Detaylı Analiz</div>
         {bransAnaliz.length === 0 ? (
-          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Soru \u00e7\u00f6z\u00fcm\u00fc veya \u00e7al\u0131\u015fma kayd\u0131 ekledikten sonra analiz g\u00f6r\u00fcnecektir</div>
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Soru çözümü veya çalışma kaydı ekledikten sonra analiz görünecektir</div>
         ) : (
           <div style={{ overflowX: "auto" }}>
             <table style={baseStyles.table}>
               <thead>
                 <tr>
-                  <th style={baseStyles.th}>Bran\u015f</th>
+                  <th style={baseStyles.th}>Branş</th>
                   <th style={baseStyles.th}>Soru</th>
                   <th style={baseStyles.th}>D/Y/B</th>
                   <th style={baseStyles.th}>Net</th>
-                  <th style={baseStyles.th}>Ba\u015far\u0131</th>
-                  <th style={baseStyles.th}>\u00c7al\u0131\u015fma</th>
+                  <th style={baseStyles.th}>Başarı</th>
+                  <th style={baseStyles.th}>Çalışma</th>
                 </tr>
               </thead>
               <tbody>
@@ -1650,17 +1659,17 @@ function Analiz({ data }) {
       {/* Konu (Subtopic) Analiz */}
       {konuAnaliz.length > 0 && (
         <div style={baseStyles.card}>
-          <div style={baseStyles.cardTitle}>Alt Konu Bazl\u0131 Analiz</div>
+          <div style={baseStyles.cardTitle}>Alt Konu Bazlı Analiz</div>
           <div style={{ overflowX: "auto" }}>
             <table style={baseStyles.table}>
               <thead>
                 <tr>
-                  <th style={baseStyles.th}>Bran\u015f</th>
+                  <th style={baseStyles.th}>Branş</th>
                   <th style={baseStyles.th}>Konu</th>
                   <th style={baseStyles.th}>Soru</th>
                   <th style={baseStyles.th}>Net</th>
-                  <th style={baseStyles.th}>Ba\u015far\u0131</th>
-                  <th style={baseStyles.th}>Ort. S\u0131nav</th>
+                  <th style={baseStyles.th}>Başarı</th>
+                  <th style={baseStyles.th}>Ort. Sınav</th>
                 </tr>
               </thead>
               <tbody>
@@ -1687,7 +1696,7 @@ function Analiz({ data }) {
       {/* Hic cozulmeyen */}
       {hicCozulmeyenler.length > 0 && (
         <div style={baseStyles.card}>
-          <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Hen\u00fcz Soru \u00c7\u00f6z\u00fclmeyen Bran\u015flar</div>
+          <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Henüz Soru Çözülmeyen Branşlar</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {hicCozulmeyenler.map(b => (
               <span key={b.id} style={{ ...baseStyles.badge(colors.warning), padding: "4px 10px", fontSize: 12 }}>{b.icon} {b.name}</span>
@@ -1698,7 +1707,7 @@ function Analiz({ data }) {
 
       {/* Temel vs Klinik karsilastirma */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Temel T\u0131p vs Klinik T\u0131p</div>
+        <div style={baseStyles.cardTitle}>Temel Tıp vs Klinik Tıp</div>
         {(() => {
           const temelKayitlar = data.soruCozumleri.filter(s => temelBranslar.find(b => b.id === s.bransId));
           const klinikKayitlar = data.soruCozumleri.filter(s => klinikBranslar.find(b => b.id === s.bransId));
@@ -1711,14 +1720,14 @@ function Analiz({ data }) {
           return (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <div style={{ textAlign: "center", padding: 16, borderRadius: 8, background: colors.temel + "15" }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: colors.temel, marginBottom: 8 }}>Temel T\u0131p</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: colors.temel, marginBottom: 8 }}>Temel Tıp</div>
                 <div style={{ fontSize: 24, fontWeight: 800 }}>{tS > 0 ? ((tD / tS) * 100).toFixed(0) : 0}%</div>
-                <div style={{ fontSize: 12, color: colors.textMuted }}>{tS} soru \u00b7 {hesaplaNet(tD, tY).toFixed(1)} net</div>
+                <div style={{ fontSize: 12, color: colors.textMuted }}>{tS} soru · {hesaplaNet(tD, tY).toFixed(1)} net</div>
               </div>
               <div style={{ textAlign: "center", padding: 16, borderRadius: 8, background: colors.klinik + "15" }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: colors.klinik, marginBottom: 8 }}>Klinik T\u0131p</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: colors.klinik, marginBottom: 8 }}>Klinik Tıp</div>
                 <div style={{ fontSize: 24, fontWeight: 800 }}>{kS > 0 ? ((kD / kS) * 100).toFixed(0) : 0}%</div>
-                <div style={{ fontSize: 12, color: colors.textMuted }}>{kS} soru \u00b7 {hesaplaNet(kD, kY).toFixed(1)} net</div>
+                <div style={{ fontSize: 12, color: colors.textMuted }}>{kS} soru · {hesaplaNet(kD, kY).toFixed(1)} net</div>
               </div>
             </div>
           );
@@ -1730,13 +1739,13 @@ function Analiz({ data }) {
 
 // ===================== MAIN APP =====================
 const tabs = [
-  { id: "dashboard", label: "Genel Bak\u0131\u015f" },
+  { id: "dashboard", label: "Genel Bakış" },
   { id: "konular", label: "Konu Takibi" },
-  { id: "dagilim", label: "Soru Da\u011f\u0131l\u0131m\u0131" },
-  { id: "sorular", label: "Soru \u00c7\u00f6z\u00fcm\u00fc" },
+  { id: "dagilim", label: "Soru Dağılımı" },
+  { id: "sorular", label: "Soru Çözümü" },
   { id: "denemeler", label: "Denemeler" },
-  { id: "plan", label: "\u00c7al\u0131\u015fma Plan\u0131" },
-  { id: "kayit", label: "\u00c7al\u0131\u015fma Kayd\u0131" },
+  { id: "plan", label: "Çalışma Planı" },
+  { id: "kayit", label: "Çalışma Kaydı" },
   { id: "analiz", label: "Analiz" },
 ];
 
@@ -1793,7 +1802,7 @@ export default function TusTakip() {
   }, []);
 
   const resetData = () => {
-    if (confirm("T\u00fcm veriler silinecek. Emin misiniz?")) {
+    if (confirm("Tüm veriler silinecek. Emin misiniz?")) {
       setData(defaultData());
     }
   };
@@ -1805,9 +1814,9 @@ export default function TusTakip() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <h1 style={baseStyles.title}>TUS Takip</h1>
-              <p style={baseStyles.subtitle}>T\u0131pta Uzmanl\u0131k S\u0131nav\u0131 Haz\u0131rl\u0131k Takip Sistemi</p>
+              <p style={baseStyles.subtitle}>Tıpta Uzmanlık Sınavı Hazırlık Takip Sistemi</p>
             </div>
-            <button onClick={resetData} style={{ ...baseStyles.btn("ghost"), fontSize: 11, opacity: 0.5 }}>S\u0131f\u0131rla</button>
+            <button onClick={resetData} style={{ ...baseStyles.btn("ghost"), fontSize: 11, opacity: 0.7, color: "#fff" }}>Sıfırla</button>
           </div>
           <nav style={baseStyles.nav}>
             {tabs.map(t => (
