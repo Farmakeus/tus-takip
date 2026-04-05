@@ -6,14 +6,14 @@ const temelBranslar = [
     id: "anatomi", name: "Anatomi", icon: "\u{1F9B4}", soruSayisi: 13,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
-      { name: "Kemikler", dagilim: [1, 0, 3, 1, 0, 1] },
-      { name: "Eklemler", dagilim: [0, 1, 0, 0, 0, 0] },
-      { name: "Kaslar", dagilim: [2, 1, 2, 3, 2, 3] },
-      { name: "Solunum Sistemi", dagilim: [2, 1, 1, 1, 2, 1] },
-      { name: "Dolaşım Sistemi", dagilim: [3, 3, 0, 2, 1, 1] },
-      { name: "Gastrointestinal Sistem", dagilim: [2, 3, 2, 1, 1, 1] },
-      { name: "Ürogenital Sistem", dagilim: [1, 1, 1, 1, 2, 1] },
-      { name: "Nöroanatomi", dagilim: [2, 3, 4, 4, 5, 5] },
+      { name: "Kemikler", dagilim: [1, 0, 3, 1, 0, 1], altBasliklar: ["Üst Ekstremite", "Alt Ekstremite", "Aksiyel İskelet"] },
+      { name: "Eklemler", dagilim: [0, 1, 0, 0, 0, 0], altBasliklar: ["Üst Ekstremite Eklemleri", "Alt Ekstremite Eklemleri"] },
+      { name: "Kaslar", dagilim: [2, 1, 2, 3, 2, 3], altBasliklar: ["Üst Ekstremite Kasları", "Alt Ekstremite Kasları", "Gövde Kasları", "Baş-Boyun Kasları"] },
+      { name: "Solunum Sistemi", dagilim: [2, 1, 1, 1, 2, 1], altBasliklar: ["Üst Solunum Yolları", "Alt Solunum Yolları", "Mediasten"] },
+      { name: "Dolaşım Sistemi", dagilim: [3, 3, 0, 2, 1, 1], altBasliklar: ["Kalp", "Arterler", "Venler", "Lenfatik Sistem"] },
+      { name: "Gastrointestinal Sistem", dagilim: [2, 3, 2, 1, 1, 1], altBasliklar: ["Üst GİS", "Alt GİS", "Karın Duvarı"] },
+      { name: "Ürogenital Sistem", dagilim: [1, 1, 1, 1, 2, 1], altBasliklar: ["Üriner Sistem", "Erkek Genital", "Kadın Genital"] },
+      { name: "Nöroanatomi", dagilim: [2, 3, 4, 4, 5, 5], altBasliklar: ["Serebrum", "Serebellum", "Beyin Sapı", "Spinal Kord", "Kranial Sinirler", "Periferik Sinirler"] },
     ],
   },
   {
@@ -104,8 +104,6 @@ const temelBranslar = [
   { id: "histoloji", name: "Histoloji ve Embriyoloji", icon: "\u{1F9EB}", soruSayisi: 8 },
   { id: "tibbigenetik", name: "Tıbbi Genetik", icon: "\u{1F9EC}", soruSayisi: 5 },
   { id: "biyoistatistik", name: "Biyoistatistik", icon: "\u{1F4CA}", soruSayisi: 5 },
-  { id: "tibbiekoloji", name: "Tıbbi Ekoloji", icon: "\u{1F33F}", soruSayisi: 3 },
-  { id: "tibbietik", name: "Tıbbi Etik / Deontoloji", icon: "\u2696\uFE0F", soruSayisi: 3 },
 ];
 
 const klinikBranslar = [
@@ -279,6 +277,11 @@ function getAllKonuKeys() {
     if (b.konular && b.konular.length > 0) {
       b.konular.forEach(k => {
         keys.push(`${b.id}_${k.name}`);
+        if (k.altBasliklar) {
+          k.altBasliklar.forEach(ab => {
+            keys.push(`${b.id}_${k.name}_${ab}`);
+          });
+        }
       });
     } else {
       keys.push(b.id);
@@ -288,18 +291,31 @@ function getAllKonuKeys() {
 }
 
 // Get brans-level progress from subtopic statuses
+function durumToPct(durum) {
+  return durum === "tamamlandi" ? 100 : durum === "devam" ? 50 : durum === "tekrar" ? 75 : 0;
+}
+
 function getBransProgress(brans, konuDurumlari) {
   if (!brans.konular || brans.konular.length === 0) {
     const durum = konuDurumlari[brans.id] || "baslanmadi";
-    return durum === "tamamlandi" ? 100 : durum === "devam" ? 50 : durum === "tekrar" ? 75 : 0;
+    return durumToPct(durum);
   }
   let total = 0;
+  let count = 0;
   brans.konular.forEach(k => {
-    const key = `${brans.id}_${k.name}`;
-    const durum = konuDurumlari[key] || "baslanmadi";
-    total += durum === "tamamlandi" ? 100 : durum === "devam" ? 50 : durum === "tekrar" ? 75 : 0;
+    if (k.altBasliklar && k.altBasliklar.length > 0) {
+      k.altBasliklar.forEach(ab => {
+        const abKey = `${brans.id}_${k.name}_${ab}`;
+        total += durumToPct(konuDurumlari[abKey] || "baslanmadi");
+        count++;
+      });
+    } else {
+      const key = `${brans.id}_${k.name}`;
+      total += durumToPct(konuDurumlari[key] || "baslanmadi");
+      count++;
+    }
   });
-  return total / brans.konular.length;
+  return count > 0 ? total / count : 0;
 }
 
 // Calculate average for a dagilim array
@@ -878,7 +894,7 @@ function Dashboard({ data, setData, colors, baseStyles }) {
       {/* Konu Ilerlemesi Ozet */}
       <div style={baseStyles.grid2}>
         <div style={baseStyles.card}>
-          <div style={baseStyles.cardTitle}><span style={{ color: colors.temel }}>&#9632;</span> Temel Tıp İlerlemesi</div>
+          <div style={baseStyles.cardTitle}><span style={{ color: colors.temel }}>&#9632;</span> Temel Bilimler İlerleme</div>
           {temelBranslar.map(b => {
             const pct = getBransProgress(b, data.konuDurumlari);
             const c = getBransProgressColor(pct);
@@ -895,18 +911,36 @@ function Dashboard({ data, setData, colors, baseStyles }) {
           })}
         </div>
         <div style={baseStyles.card}>
-          <div style={baseStyles.cardTitle}><span style={{ color: colors.klinik }}>&#9632;</span> Klinik Tıp İlerlemesi</div>
+          <div style={baseStyles.cardTitle}><span style={{ color: colors.klinik }}>&#9632;</span> Klinik Bilimler İlerleme</div>
           {klinikBranslar.map(b => {
             const pct = getBransProgress(b, data.konuDurumlari);
             const c = getBransProgressColor(pct);
+            const isKucukStaj = b.id === "kucukStajlar";
             return (
-              <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                <span style={{ fontSize: 14, width: 20 }}>{b.icon}</span>
-                <span style={{ fontSize: 12, width: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.name}</span>
-                <div style={baseStyles.progressBar(pct)}>
-                  <div style={baseStyles.progressFill(pct, c)} />
+              <div key={b.id}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  <span style={{ fontSize: 14, width: 20 }}>{b.icon}</span>
+                  <span style={{ fontSize: 12, width: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.name}</span>
+                  <div style={baseStyles.progressBar(pct)}>
+                    <div style={baseStyles.progressFill(pct, c)} />
+                  </div>
+                  <span style={{ fontSize: 10, color: colors.textMuted, width: 32, textAlign: "right" }}>{Math.round(pct)}%</span>
                 </div>
-                <span style={{ fontSize: 10, color: colors.textMuted, width: 32, textAlign: "right" }}>{Math.round(pct)}%</span>
+                {isKucukStaj && b.konular && b.konular.map(k => {
+                  const key = `${b.id}_${k.name}`;
+                  const durum = data.konuDurumlari[key] || "baslanmadi";
+                  const subPct = durum === "tamamlandi" ? 100 : durum === "devam" ? 50 : durum === "tekrar" ? 75 : 0;
+                  const subColor = getBransProgressColor(subPct);
+                  return (
+                    <div key={key} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, paddingLeft: 40 }}>
+                      <span style={{ fontSize: 11, width: 130, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: colors.textMuted }}>{k.name}</span>
+                      <div style={{ ...baseStyles.progressBar(subPct), height: 4 }}>
+                        <div style={{ ...baseStyles.progressFill(subPct, subColor), height: 4 }} />
+                      </div>
+                      <span style={{ fontSize: 9, color: colors.textMuted, width: 28, textAlign: "right" }}>{Math.round(subPct)}%</span>
+                    </div>
+                  );
+                })}
               </div>
             );
           })}
@@ -931,6 +965,7 @@ function Dashboard({ data, setData, colors, baseStyles }) {
 // --- Konu Takibi (Enhanced with subtopics) ---
 function KonuTakibi({ data, setData, colors, baseStyles }) {
   const [expandedBrans, setExpandedBrans] = useState({});
+  const [expandedKonu, setExpandedKonu] = useState({});
 
   const durumlar = [
     { id: "baslanmadi", label: "Başlanmadı", color: colors.textMuted },
@@ -1032,35 +1067,97 @@ function KonuTakibi({ data, setData, colors, baseStyles }) {
                     const key = `${b.id}_${k.name}`;
                     const durum = data.konuDurumlari[key] || "baslanmadi";
                     const avg = ortalama(k.dagilim);
+                    const hasAltBasliklar = k.altBasliklar && k.altBasliklar.length > 0;
+                    const isKonuExpanded = expandedKonu[key];
+                    // Calculate konu progress from altBasliklar
+                    const konuPct = hasAltBasliklar
+                      ? k.altBasliklar.reduce((s, ab) => s + durumToPct(data.konuDurumlari[`${b.id}_${k.name}_${ab}`] || "baslanmadi"), 0) / k.altBasliklar.length
+                      : durumToPct(durum);
+                    const konuPctColor = konuPct >= 90 ? colors.success : konuPct >= 50 ? colors.warning : konuPct > 0 ? colors.klinik : colors.border;
                     return (
-                      <div key={ki} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 16px 6px 52px", flexWrap: "wrap" }}>
-                        <div style={{ flex: 1, minWidth: 160 }}>
-                          <div style={{ fontSize: 13, fontWeight: 500 }}>{k.name}</div>
-                          <div style={{ fontSize: 10, color: colors.textMuted }}>Ort: {avg.toFixed(1)} soru/sınav</div>
+                      <div key={ki}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 16px 6px 52px", flexWrap: "wrap", cursor: hasAltBasliklar ? "pointer" : "default" }}
+                          onClick={() => hasAltBasliklar && setExpandedKonu(prev => ({ ...prev, [key]: !prev[key] }))}
+                        >
+                          {hasAltBasliklar && (
+                            <span style={{ fontSize: 10, color: colors.textMuted, width: 14, textAlign: "center", transition: "transform 0.2s", transform: isKonuExpanded ? "rotate(90deg)" : "rotate(0deg)" }}>
+                              &#9654;
+                            </span>
+                          )}
+                          <div style={{ flex: 1, minWidth: 160 }}>
+                            <div style={{ fontSize: 13, fontWeight: 500 }}>{k.name}</div>
+                            <div style={{ fontSize: 10, color: colors.textMuted }}>
+                              Ort: {avg.toFixed(1)} soru/sınav
+                              {hasAltBasliklar && ` | ${k.altBasliklar.length} alt başlık`}
+                            </div>
+                          </div>
+                          {/* High yield indicator */}
+                          {avg >= 2.5 && (
+                            <span style={{ ...baseStyles.badge(colors.warning), fontSize: 9, padding: "1px 6px" }}>
+                              Yüksek Verim
+                            </span>
+                          )}
+                          {hasAltBasliklar && (
+                            <div style={{ display: "flex", alignItems: "center", gap: 4, minWidth: 80 }}>
+                              <div style={{ ...baseStyles.progressBar(konuPct), width: 50, height: 4 }}>
+                                <div style={{ ...baseStyles.progressFill(konuPct, konuPctColor), height: 4 }} />
+                              </div>
+                              <span style={{ fontSize: 9, color: konuPctColor, fontWeight: 600 }}>{Math.round(konuPct)}%</span>
+                            </div>
+                          )}
+                          {!hasAltBasliklar && (
+                            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+                              {durumlar.map(d => (
+                                <button
+                                  key={d.id}
+                                  onClick={(e) => { e.stopPropagation(); setDurum(key, d.id); }}
+                                  style={{
+                                    padding: "3px 8px", borderRadius: 5,
+                                    border: durum === d.id ? `2px solid ${d.color}` : `1px solid ${colors.border}`,
+                                    background: durum === d.id ? d.color + "22" : "transparent",
+                                    color: durum === d.id ? d.color : colors.textMuted,
+                                    fontSize: 10, fontWeight: 600, cursor: "pointer",
+                                  }}
+                                >
+                                  {d.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        {/* High yield indicator */}
-                        {avg >= 2.5 && (
-                          <span style={{ ...baseStyles.badge(colors.warning), fontSize: 9, padding: "1px 6px" }}>
-                            Yüksek Verim
-                          </span>
+                        {/* Alt Basliklar (third level) */}
+                        {hasAltBasliklar && isKonuExpanded && (
+                          <div style={{ paddingLeft: 80, paddingRight: 16, paddingBottom: 4 }}>
+                            {k.altBasliklar.map((ab, abi) => {
+                              const abKey = `${b.id}_${k.name}_${ab}`;
+                              const abDurum = data.konuDurumlari[abKey] || "baslanmadi";
+                              return (
+                                <div key={abi} style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 0", flexWrap: "wrap" }}>
+                                  <div style={{ flex: 1, minWidth: 120 }}>
+                                    <div style={{ fontSize: 12, color: colors.textMuted, fontWeight: 500 }}>{ab}</div>
+                                  </div>
+                                  <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+                                    {durumlar.map(d => (
+                                      <button
+                                        key={d.id}
+                                        onClick={() => setDurum(abKey, d.id)}
+                                        style={{
+                                          padding: "2px 6px", borderRadius: 4,
+                                          border: abDurum === d.id ? `2px solid ${d.color}` : `1px solid ${colors.border}`,
+                                          background: abDurum === d.id ? d.color + "22" : "transparent",
+                                          color: abDurum === d.id ? d.color : colors.textMuted,
+                                          fontSize: 9, fontWeight: 600, cursor: "pointer",
+                                        }}
+                                      >
+                                        {d.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
                         )}
-                        <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-                          {durumlar.map(d => (
-                            <button
-                              key={d.id}
-                              onClick={() => setDurum(key, d.id)}
-                              style={{
-                                padding: "3px 8px", borderRadius: 5,
-                                border: durum === d.id ? `2px solid ${d.color}` : `1px solid ${colors.border}`,
-                                background: durum === d.id ? d.color + "22" : "transparent",
-                                color: durum === d.id ? d.color : colors.textMuted,
-                                fontSize: 10, fontWeight: 600, cursor: "pointer",
-                              }}
-                            >
-                              {d.label}
-                            </button>
-                          ))}
-                        </div>
                       </div>
                     );
                   })}
@@ -1090,174 +1187,8 @@ function KonuTakibi({ data, setData, colors, baseStyles }) {
           </div>
         ))}
       </div>
-      {renderBransGrubu("Temel Tıp Bilimleri", temelBranslar, colors.temel)}
-      {renderBransGrubu("Klinik Tıp Bilimleri", klinikBranslar, colors.klinik)}
-    </div>
-  );
-}
-
-// --- Soru Dagilimi (Heatmap) ---
-function SoruDagilimi({ colors, baseStyles }) {
-  const [selectedBrans, setSelectedBrans] = useState(branslarWithKonular[0]?.id || "");
-
-  const brans = tumBranslar.find(b => b.id === selectedBrans);
-
-  const getHeatmapColor = (value, maxVal) => {
-    if (value === 0) return "transparent";
-    const intensity = Math.min(1, value / Math.max(maxVal, 1));
-    const r = Math.round(46 + intensity * (27 - 46));
-    const g = Math.round(125 + intensity * (94 - 125));
-    const b_val = Math.round(50 + intensity * (32 - 50));
-    const alpha = 0.15 + intensity * 0.7;
-    return `rgba(${r}, ${g}, ${b_val}, ${alpha})`;
-  };
-
-  if (!brans || !brans.konular) return null;
-
-  const allValues = brans.konular.flatMap(k => k.dagilim);
-  const maxVal = Math.max(...allValues, 1);
-
-  return (
-    <div>
-      {/* Brans Selector */}
-      <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Soru Dağılımı - Branş Seçimi</div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {branslarWithKonular.map(b => (
-            <button
-              key={b.id}
-              onClick={() => setSelectedBrans(b.id)}
-              style={{
-                padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-                fontSize: 12, fontWeight: 600,
-                background: selectedBrans === b.id ? colors.primary : colors.inputBg,
-                color: selectedBrans === b.id ? "#fff" : colors.textMuted,
-                transition: "all 0.2s",
-              }}
-            >
-              {b.icon} {b.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Heatmap Table */}
-      <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>
-          {brans.icon} {brans.name} - Sınav Dönemi Soru Dağılımı
-        </div>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ ...baseStyles.table, minWidth: 600 }}>
-            <thead>
-              <tr>
-                <th style={{ ...baseStyles.th, position: "sticky", left: 0, background: colors.card, zIndex: 2, minWidth: 180 }}>Konu</th>
-                {brans.donemler.map((d, i) => (
-                  <th key={i} style={{ ...baseStyles.th, textAlign: "center", minWidth: 70 }}>{d}</th>
-                ))}
-                <th style={{ ...baseStyles.th, textAlign: "center", minWidth: 60, fontWeight: 700 }}>Ort.</th>
-                <th style={{ ...baseStyles.th, textAlign: "center", minWidth: 60 }}>Top.</th>
-                <th style={{ ...baseStyles.th, minWidth: 80 }}>Verim</th>
-              </tr>
-            </thead>
-            <tbody>
-              {brans.konular.map((k, ki) => {
-                const avg = ortalama(k.dagilim);
-                const total = k.dagilim.reduce((s, v) => s + v, 0);
-                const isHighYield = avg >= 2.5;
-                return (
-                  <tr key={ki}>
-                    <td style={{ ...baseStyles.td, position: "sticky", left: 0, background: colors.card, zIndex: 1, fontWeight: 500, fontSize: 12 }}>
-                      {k.name}
-                    </td>
-                    {k.dagilim.map((val, vi) => (
-                      <td
-                        key={vi}
-                        style={{
-                          ...baseStyles.td,
-                          textAlign: "center",
-                          fontWeight: val > 0 ? 700 : 400,
-                          color: val === 0 ? colors.textMuted + "44" : colors.text,
-                          background: getHeatmapColor(val, maxVal),
-                          borderRadius: 0,
-                        }}
-                      >
-                        {val}
-                      </td>
-                    ))}
-                    <td style={{ ...baseStyles.td, textAlign: "center", fontWeight: 700, color: colors.primary, fontSize: 13 }}>
-                      {avg.toFixed(1)}
-                    </td>
-                    <td style={{ ...baseStyles.td, textAlign: "center", color: colors.textMuted }}>
-                      {total}
-                    </td>
-                    <td style={baseStyles.td}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        <div style={{ flex: 1, height: 8, borderRadius: 4, background: colors.border, overflow: "hidden" }}>
-                          <div style={{
-                            height: "100%", borderRadius: 4,
-                            width: `${Math.min(100, (avg / Math.max(...brans.konular.map(x => ortalama(x.dagilim)), 1)) * 100)}%`,
-                            background: isHighYield ? colors.warning : avg >= 1.5 ? colors.primary : colors.textMuted,
-                            transition: "width 0.3s",
-                          }} />
-                        </div>
-                        {isHighYield && (
-                          <span style={{ fontSize: 9, color: colors.warning, fontWeight: 700 }}>!</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td style={{ ...baseStyles.td, fontWeight: 700, position: "sticky", left: 0, background: colors.card, zIndex: 1 }}>Toplam</td>
-                {brans.donemler.map((_, di) => {
-                  const colTotal = brans.konular.reduce((s, k) => s + k.dagilim[di], 0);
-                  return (
-                    <td key={di} style={{ ...baseStyles.td, textAlign: "center", fontWeight: 700, color: colors.primary }}>
-                      {colTotal}
-                    </td>
-                  );
-                })}
-                <td style={{ ...baseStyles.td, textAlign: "center", fontWeight: 700, color: colors.success }}>
-                  {(brans.konular.reduce((s, k) => s + ortalama(k.dagilim), 0)).toFixed(1)}
-                </td>
-                <td style={{ ...baseStyles.td, textAlign: "center", fontWeight: 700 }}>
-                  {brans.konular.reduce((s, k) => s + k.dagilim.reduce((a, b) => a + b, 0), 0)}
-                </td>
-                <td style={baseStyles.td}></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-
-      {/* High Yield Summary */}
-      <div style={baseStyles.card}>
-        <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Yüksek Verimli Konular (Ort. &ge; 2.5 soru)</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          {brans.konular
-            .filter(k => ortalama(k.dagilim) >= 2.5)
-            .sort((a, b) => ortalama(b.dagilim) - ortalama(a.dagilim))
-            .map((k, i) => (
-              <div key={i} style={{
-                padding: "6px 12px", borderRadius: 8,
-                background: colors.warning + "15", border: `1px solid ${colors.warning}33`,
-                display: "flex", alignItems: "center", gap: 6,
-              }}>
-                <span style={{ fontSize: 12, fontWeight: 600 }}>{k.name}</span>
-                <span style={{ fontSize: 11, color: colors.warning, fontWeight: 700 }}>
-                  {ortalama(k.dagilim).toFixed(1)}
-                </span>
-              </div>
-            ))
-          }
-          {brans.konular.filter(k => ortalama(k.dagilim) >= 2.5).length === 0 && (
-            <div style={{ color: colors.textMuted, fontSize: 13 }}>Bu branşta yüksek verimli konu bulunmuyor</div>
-          )}
-        </div>
-      </div>
+      {renderBransGrubu("Temel Bilimler", temelBranslar, colors.temel)}
+      {renderBransGrubu("Klinik Bilimler", klinikBranslar, colors.klinik)}
     </div>
   );
 }
@@ -1898,16 +1829,22 @@ function PomodoroTimer({ data, setData, colors, baseStyles }) {
 function NotDefteri({ data, setData, colors, baseStyles }) {
   const [selectedBrans, setSelectedBrans] = useState("");
   const [selectedKonu, setSelectedKonu] = useState("");
+  const [selectedAltBaslik, setSelectedAltBaslik] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [editingKey, setEditingKey] = useState(null);
   const [editText, setEditText] = useState("");
+  const [treeExpandedBrans, setTreeExpandedBrans] = useState({});
+  const [treeExpandedKonu, setTreeExpandedKonu] = useState({});
 
   const brans = tumBranslar.find(b => b.id === selectedBrans);
+  const selectedKonuObj = brans && brans.konular ? brans.konular.find(k => k.name === selectedKonu) : null;
   const notlar = data.notlar || {};
 
   const getNoteKey = () => {
     if (!selectedBrans) return null;
-    return selectedKonu ? `${selectedBrans}_${selectedKonu}` : selectedBrans;
+    if (selectedAltBaslik && selectedKonu) return `${selectedBrans}_${selectedKonu}_${selectedAltBaslik}`;
+    if (selectedKonu) return `${selectedBrans}_${selectedKonu}`;
+    return selectedBrans;
   };
 
   const saveNote = () => {
@@ -1927,11 +1864,11 @@ function NotDefteri({ data, setData, colors, baseStyles }) {
     setData(d => ({ ...d, notlar: updated }));
   };
 
-  const startEdit = () => {
-    const key = getNoteKey();
-    if (!key) return;
-    const existing = notlar[key];
-    setEditingKey(key);
+  const startEdit = (key) => {
+    const targetKey = key || getNoteKey();
+    if (!targetKey) return;
+    const existing = notlar[targetKey];
+    setEditingKey(targetKey);
     setEditText(existing ? existing.text : "");
   };
 
@@ -1944,87 +1881,198 @@ function NotDefteri({ data, setData, colors, baseStyles }) {
   const getNoteLabel = (key) => {
     const parts = key.split("_");
     const b = tumBranslar.find(x => x.id === parts[0]);
-    if (parts.length > 1) {
-      return `${b ? b.icon + " " + b.name : parts[0]} > ${parts.slice(1).join("_")}`;
+    const bName = b ? `${b.icon} ${b.name}` : parts[0];
+    if (parts.length === 3) {
+      return `${bName} > ${parts[1]} > ${parts[2]}`;
     }
-    return b ? `${b.icon} ${b.name}` : key;
+    if (parts.length === 2) {
+      return `${bName} > ${parts[1]}`;
+    }
+    return bName;
   };
 
+  const getNoteLevel = (key) => {
+    const parts = key.split("_");
+    if (parts.length === 3) return "altBaslik";
+    if (parts.length === 2) return "konu";
+    return "brans";
+  };
+
+  const levelBadge = (level) => {
+    const config = level === "brans" ? { label: "Branş", color: colors.primary }
+      : level === "konu" ? { label: "Alt Konu", color: colors.klinik }
+      : { label: "Alt Başlık", color: colors.temel };
+    return (
+      <span style={{ ...baseStyles.badge(config.color), fontSize: 9, padding: "1px 6px" }}>{config.label}</span>
+    );
+  };
+
+  // Count notes per brans for tree
+  const noteCountForKey = (prefix) => Object.keys(notlar).filter(k => k === prefix || k.startsWith(prefix + "_")).length;
+
   return (
-    <div>
+    <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 16, alignItems: "start" }}>
+      {/* Left: Tree Navigation */}
       <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Not Ekle / Düzenle</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 12 }}>
-          <div>
-            <label style={baseStyles.label}>Branş</label>
-            <select value={selectedBrans} onChange={e => { setSelectedBrans(e.target.value); setSelectedKonu(""); }} style={baseStyles.select}>
-              <option value="">Seçiniz...</option>
-              <optgroup label="Temel Tıp">
-                {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
-              </optgroup>
-              <optgroup label="Klinik Tıp">
-                {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
-              </optgroup>
-            </select>
-          </div>
-          {brans && brans.konular && brans.konular.length > 0 && (
+        <div style={{ ...baseStyles.cardTitle, fontSize: 14 }}>Branş Ağacı</div>
+        <div style={{ maxHeight: 500, overflowY: "auto" }}>
+          {[{ label: "Temel Bilimler", list: temelBranslar, color: colors.temel }, { label: "Klinik Bilimler", list: klinikBranslar, color: colors.klinik }].map(group => (
+            <div key={group.label} style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: group.color, marginBottom: 4, textTransform: "uppercase" }}>{group.label}</div>
+              {group.list.map(b => {
+                const bNoteCount = noteCountForKey(b.id);
+                const isBransExpanded = treeExpandedBrans[b.id];
+                const hasKonular = b.konular && b.konular.length > 0;
+                return (
+                  <div key={b.id}>
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, cursor: "pointer", fontSize: 12, background: selectedBrans === b.id && !selectedKonu ? colors.primary + "22" : "transparent" }}
+                      onClick={() => { setSelectedBrans(b.id); setSelectedKonu(""); setSelectedAltBaslik(""); if (hasKonular) setTreeExpandedBrans(p => ({ ...p, [b.id]: !p[b.id] })); }}
+                    >
+                      {hasKonular && <span style={{ fontSize: 9, color: colors.textMuted, width: 10, transition: "transform 0.2s", transform: isBransExpanded ? "rotate(90deg)" : "rotate(0deg)" }}>&#9654;</span>}
+                      {!hasKonular && <span style={{ width: 10 }} />}
+                      <span>{b.icon}</span>
+                      <span style={{ flex: 1, fontWeight: 500 }}>{b.name}</span>
+                      {bNoteCount > 0 && <span style={{ fontSize: 9, color: colors.primary, fontWeight: 700, background: colors.primary + "22", borderRadius: 8, padding: "1px 5px" }}>{bNoteCount}</span>}
+                    </div>
+                    {hasKonular && isBransExpanded && b.konular.map((k, ki) => {
+                      const hasAB = k.altBasliklar && k.altBasliklar.length > 0;
+                      const kKey = `${b.id}_${k.name}`;
+                      const isKonuExp = treeExpandedKonu[kKey];
+                      const kNoteCount = noteCountForKey(kKey);
+                      return (
+                        <div key={ki}>
+                          <div
+                            style={{ display: "flex", alignItems: "center", gap: 5, padding: "3px 6px 3px 26px", borderRadius: 5, cursor: "pointer", fontSize: 11, background: selectedBrans === b.id && selectedKonu === k.name && !selectedAltBaslik ? colors.klinik + "22" : "transparent" }}
+                            onClick={() => { setSelectedBrans(b.id); setSelectedKonu(k.name); setSelectedAltBaslik(""); if (hasAB) setTreeExpandedKonu(p => ({ ...p, [kKey]: !p[kKey] })); }}
+                          >
+                            {hasAB && <span style={{ fontSize: 8, color: colors.textMuted, width: 8, transition: "transform 0.2s", transform: isKonuExp ? "rotate(90deg)" : "rotate(0deg)" }}>&#9654;</span>}
+                            {!hasAB && <span style={{ width: 8 }} />}
+                            <span style={{ flex: 1, color: colors.textMuted }}>{k.name}</span>
+                            {kNoteCount > 0 && <span style={{ fontSize: 8, color: colors.klinik, fontWeight: 700, background: colors.klinik + "22", borderRadius: 6, padding: "0px 4px" }}>{kNoteCount}</span>}
+                          </div>
+                          {hasAB && isKonuExp && k.altBasliklar.map((ab, abi) => {
+                            const abKey = `${b.id}_${k.name}_${ab}`;
+                            const abHasNote = !!notlar[abKey];
+                            return (
+                              <div
+                                key={abi}
+                                style={{ display: "flex", alignItems: "center", gap: 4, padding: "2px 6px 2px 44px", borderRadius: 4, cursor: "pointer", fontSize: 10, background: selectedBrans === b.id && selectedKonu === k.name && selectedAltBaslik === ab ? colors.temel + "22" : "transparent" }}
+                                onClick={() => { setSelectedBrans(b.id); setSelectedKonu(k.name); setSelectedAltBaslik(ab); }}
+                              >
+                                <span style={{ flex: 1, color: colors.textMuted }}>{ab}</span>
+                                {abHasNote && <span style={{ width: 5, height: 5, borderRadius: "50%", background: colors.temel }} />}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right: Note Editor and List */}
+      <div>
+        <div style={baseStyles.card}>
+          <div style={baseStyles.cardTitle}>Not Ekle / Düzenle</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 12 }}>
             <div>
-              <label style={baseStyles.label}>Alt Konu (İsteğe bağlı)</label>
-              <select value={selectedKonu} onChange={e => setSelectedKonu(e.target.value)} style={baseStyles.select}>
-                <option value="">Genel Not</option>
-                {brans.konular.map((k, i) => <option key={i} value={k.name}>{k.name}</option>)}
+              <label style={baseStyles.label}>Branş</label>
+              <select value={selectedBrans} onChange={e => { setSelectedBrans(e.target.value); setSelectedKonu(""); setSelectedAltBaslik(""); }} style={baseStyles.select}>
+                <option value="">Seçiniz...</option>
+                <optgroup label="Temel Bilimler">
+                  {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+                </optgroup>
+                <optgroup label="Klinik Bilimler">
+                  {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+                </optgroup>
               </select>
+            </div>
+            {brans && brans.konular && brans.konular.length > 0 && (
+              <div>
+                <label style={baseStyles.label}>Alt Konu</label>
+                <select value={selectedKonu} onChange={e => { setSelectedKonu(e.target.value); setSelectedAltBaslik(""); }} style={baseStyles.select}>
+                  <option value="">Genel Not</option>
+                  {brans.konular.map((k, i) => <option key={i} value={k.name}>{k.name}</option>)}
+                </select>
+              </div>
+            )}
+            {selectedKonuObj && selectedKonuObj.altBasliklar && selectedKonuObj.altBasliklar.length > 0 && (
+              <div>
+                <label style={baseStyles.label}>Alt Başlık</label>
+                <select value={selectedAltBaslik} onChange={e => setSelectedAltBaslik(e.target.value)} style={baseStyles.select}>
+                  <option value="">Konu Genel</option>
+                  {selectedKonuObj.altBasliklar.map((ab, i) => <option key={i} value={ab}>{ab}</option>)}
+                </select>
+              </div>
+            )}
+          </div>
+          {selectedBrans && (
+            <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>
+              Hedef: <strong style={{ color: colors.text }}>{getNoteLabel(getNoteKey() || "")}</strong>
+            </div>
+          )}
+          {selectedBrans && !editingKey && (
+            <button onClick={() => startEdit()} style={baseStyles.btn("primary")}>
+              {notlar[getNoteKey()] ? "Notu Düzenle" : "Yeni Not Yaz"}
+            </button>
+          )}
+          {editingKey && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 6 }}>
+                Düzenlenen: <strong>{getNoteLabel(editingKey)}</strong> {levelBadge(getNoteLevel(editingKey))}
+              </div>
+              <textarea
+                value={editText}
+                onChange={e => setEditText(e.target.value)}
+                style={{ ...baseStyles.input, minHeight: 200, resize: "vertical", fontFamily: "inherit" }}
+                placeholder="Notlarınızı buraya yazın..."
+              />
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <button onClick={saveNote} style={baseStyles.btn("success")}>Kaydet</button>
+                <button onClick={() => setEditingKey(null)} style={baseStyles.btn("ghost")}>İptal</button>
+              </div>
             </div>
           )}
         </div>
-        {selectedBrans && !editingKey && (
-          <button onClick={startEdit} style={baseStyles.btn("primary")}>
-            {notlar[getNoteKey()] ? "Notu Düzenle" : "Yeni Not Yaz"}
-          </button>
-        )}
-        {editingKey && (
-          <div style={{ marginTop: 12 }}>
-            <textarea
-              value={editText}
-              onChange={e => setEditText(e.target.value)}
-              style={{ ...baseStyles.input, minHeight: 200, resize: "vertical", fontFamily: "inherit" }}
-              placeholder="Notlarınızı buraya yazın..."
-            />
-            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-              <button onClick={saveNote} style={baseStyles.btn("success")}>Kaydet</button>
-              <button onClick={() => setEditingKey(null)} style={baseStyles.btn("ghost")}>İptal</button>
-            </div>
-          </div>
-        )}
-      </div>
 
-      <div style={baseStyles.card}>
-        <div style={baseStyles.cardTitle}>Tüm Notlar ({allNoteKeys.length})</div>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          style={{ ...baseStyles.input, marginBottom: 12 }}
-          placeholder="Notlarda ara..."
-        />
-        {allNoteKeys.length === 0 ? (
-          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz not eklenmedi</div>
-        ) : allNoteKeys.map(key => {
-          const note = notlar[key];
-          return (
-            <div key={key} style={{ padding: 12, marginBottom: 8, background: colors.inputBg, borderRadius: 8, border: `1px solid ${colors.border}` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <div style={{ fontWeight: 600, fontSize: 13 }}>{getNoteLabel(key)}</div>
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <span style={{ fontSize: 10, color: colors.textMuted }}>{note.tarih ? formatDate(note.tarih) : ""}</span>
-                  <button onClick={() => { setEditingKey(key); setEditText(note.text); }} style={{ ...baseStyles.deleteBtn, color: colors.primary, fontSize: 12 }}>Düzenle</button>
-                  <button onClick={() => deleteNote(key)} style={baseStyles.deleteBtn}>×</button>
+        <div style={baseStyles.card}>
+          <div style={baseStyles.cardTitle}>Tüm Notlar ({allNoteKeys.length})</div>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            style={{ ...baseStyles.input, marginBottom: 12 }}
+            placeholder="Notlarda ara..."
+          />
+          {allNoteKeys.length === 0 ? (
+            <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz not eklenmedi</div>
+          ) : allNoteKeys.map(key => {
+            const note = notlar[key];
+            const level = getNoteLevel(key);
+            return (
+              <div key={key} style={{ padding: 12, marginBottom: 8, background: colors.inputBg, borderRadius: 8, border: `1px solid ${colors.border}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ fontWeight: 600, fontSize: 13 }}>{getNoteLabel(key)}</div>
+                    {levelBadge(level)}
+                  </div>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <span style={{ fontSize: 10, color: colors.textMuted }}>{note.tarih ? formatDate(note.tarih) : ""}</span>
+                    <button onClick={() => { setEditingKey(key); setEditText(note.text); }} style={{ ...baseStyles.deleteBtn, color: colors.primary, fontSize: 12 }}>Düzenle</button>
+                    <button onClick={() => deleteNote(key)} style={baseStyles.deleteBtn}>×</button>
+                  </div>
                 </div>
+                <div style={{ fontSize: 13, color: colors.text, whiteSpace: "pre-wrap", maxHeight: 150, overflow: "auto" }}>{note.text}</div>
               </div>
-              <div style={{ fontSize: 13, color: colors.text, whiteSpace: "pre-wrap", maxHeight: 150, overflow: "auto" }}>{note.text}</div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -2627,7 +2675,6 @@ function Analiz({ data, colors, baseStyles }) {
 const tabs = [
   { id: "dashboard", label: "Genel Bakış" },
   { id: "konular", label: "Konu Takibi" },
-  { id: "dagilim", label: "Soru Dağılımı" },
   { id: "sorular", label: "Soru Çözümü" },
   { id: "denemeler", label: "Denemeler" },
   { id: "plan", label: "Çalışma Planı" },
@@ -2740,7 +2787,6 @@ export default function TusTakip() {
       <main style={baseStyles.main}>
         {activeTab === "dashboard" && <Dashboard data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
         {activeTab === "konular" && <KonuTakibi data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
-        {activeTab === "dagilim" && <SoruDagilimi colors={colors} baseStyles={baseStyles} />}
         {activeTab === "sorular" && <SoruCozumu data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
         {activeTab === "denemeler" && <Denemeler data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
         {activeTab === "plan" && <CalismePlani data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
