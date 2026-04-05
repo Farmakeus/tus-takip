@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 
 // ===================== DATA =====================
 const temelBranslar = [
   {
-    id: "anatomi", name: "Anatomi", icon: "🦴", soruSayisi: 13,
+    id: "anatomi", name: "Anatomi", icon: "\u{1F9B4}", soruSayisi: 13,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Kemikler", dagilim: [1, 0, 3, 1, 0, 1] },
@@ -17,7 +17,7 @@ const temelBranslar = [
     ],
   },
   {
-    id: "fizyoloji", name: "Fizyoloji", icon: "⚡", soruSayisi: 15,
+    id: "fizyoloji", name: "Fizyoloji", icon: "\u26A1", soruSayisi: 15,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Hücre", dagilim: [1, 2, 2, 1, 2, 0] },
@@ -34,7 +34,7 @@ const temelBranslar = [
     ],
   },
   {
-    id: "biyokimya", name: "Biyokimya", icon: "🧪", soruSayisi: 18,
+    id: "biyokimya", name: "Biyokimya", icon: "\u{1F9EA}", soruSayisi: 18,
     donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Hücre ve Organeller", dagilim: [0, 0, 0, 0, 1, 1] },
@@ -48,7 +48,7 @@ const temelBranslar = [
     ],
   },
   {
-    id: "mikrobiyoloji", name: "Mikrobiyoloji", icon: "🦠", soruSayisi: 18,
+    id: "mikrobiyoloji", name: "Mikrobiyoloji", icon: "\u{1F9A0}", soruSayisi: 18,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Temel Mikrobiyoloji", dagilim: [3, 2, 3, 4, 4, 2] },
@@ -60,7 +60,7 @@ const temelBranslar = [
     ],
   },
   {
-    id: "patoloji", name: "Patoloji", icon: "🔬", soruSayisi: 18,
+    id: "patoloji", name: "Patoloji", icon: "\u{1F52C}", soruSayisi: 18,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Hücre", dagilim: [1, 1, 2, 1, 2, 3] },
@@ -85,7 +85,7 @@ const temelBranslar = [
     ],
   },
   {
-    id: "farmakoloji", name: "Farmakoloji", icon: "💊", soruSayisi: 18,
+    id: "farmakoloji", name: "Farmakoloji", icon: "\u{1F48A}", soruSayisi: 18,
     donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Genel Farmakoloji", dagilim: [1, 1, 1, 2, 2, 3] },
@@ -101,16 +101,16 @@ const temelBranslar = [
       { name: "Toksikoloji", dagilim: [2, 1, 1, 1, 0, 1] },
     ],
   },
-  { id: "histoloji", name: "Histoloji ve Embriyoloji", icon: "🧫", soruSayisi: 8 },
-  { id: "tibbigenetik", name: "Tıbbi Genetik", icon: "🧬", soruSayisi: 5 },
-  { id: "biyoistatistik", name: "Biyoistatistik", icon: "📊", soruSayisi: 5 },
-  { id: "tibbiekoloji", name: "Tıbbi Ekoloji", icon: "🌿", soruSayisi: 3 },
-  { id: "tibbietik", name: "Tıbbi Etik / Deontoloji", icon: "⚖️", soruSayisi: 3 },
+  { id: "histoloji", name: "Histoloji ve Embriyoloji", icon: "\u{1F9EB}", soruSayisi: 8 },
+  { id: "tibbigenetik", name: "Tıbbi Genetik", icon: "\u{1F9EC}", soruSayisi: 5 },
+  { id: "biyoistatistik", name: "Biyoistatistik", icon: "\u{1F4CA}", soruSayisi: 5 },
+  { id: "tibbiekoloji", name: "Tıbbi Ekoloji", icon: "\u{1F33F}", soruSayisi: 3 },
+  { id: "tibbietik", name: "Tıbbi Etik / Deontoloji", icon: "\u2696\uFE0F", soruSayisi: 3 },
 ];
 
 const klinikBranslar = [
   {
-    id: "dahiliye", name: "İç Hastalıkları", icon: "🏥", soruSayisi: 23,
+    id: "dahiliye", name: "İç Hastalıkları", icon: "\u{1F3E5}", soruSayisi: 23,
     donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Hematoloji", dagilim: [1, 2, 2, 2, 2, 2] },
@@ -128,7 +128,7 @@ const klinikBranslar = [
     ],
   },
   {
-    id: "cerrrahi", name: "Genel Cerrahi", icon: "🔪", soruSayisi: 18,
+    id: "cerrrahi", name: "Genel Cerrahi", icon: "\u{1F52A}", soruSayisi: 18,
     donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Temel Cerrahi", dagilim: [5, 7, 7, 5, 5, 7] },
@@ -149,7 +149,7 @@ const klinikBranslar = [
     ],
   },
   {
-    id: "pediatri", name: "Pediatri", icon: "👶", soruSayisi: 25,
+    id: "pediatri", name: "Pediatri", icon: "\u{1F476}", soruSayisi: 25,
     donemler: ["2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl.", "2023 Nis."],
     konular: [
       { name: "Yenidoğan", dagilim: [3, 2, 2, 2, 2, 3] },
@@ -177,7 +177,7 @@ const klinikBranslar = [
     ],
   },
   {
-    id: "kadinDogum", name: "Kadın Hastalıkları ve Doğum", icon: "🤰", soruSayisi: 10,
+    id: "kadinDogum", name: "Kadın Hastalıkları ve Doğum", icon: "\u{1F930}", soruSayisi: 10,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Jinekoloji", dagilim: [2, 1, 1, 1, 3, 2] },
@@ -187,7 +187,7 @@ const klinikBranslar = [
     ],
   },
   {
-    id: "kucukStajlar", name: "Küçük Stajlar", icon: "🏫", soruSayisi: 22,
+    id: "kucukStajlar", name: "Küçük Stajlar", icon: "\u{1F3EB}", soruSayisi: 22,
     donemler: ["2026 Mart", "2025 Ağ.", "2025 Mart", "2024 Ağ.", "2024 Mart", "2023 Eyl."],
     konular: [
       { name: "Nöroloji", dagilim: [3, 2, 3, 3, 1, 2] },
@@ -225,6 +225,7 @@ const haftaGunleri = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "
 
 // ===================== HELPERS =====================
 const LS_KEY = "tus_takip_data";
+const THEME_KEY = "tus_takip_theme";
 
 function loadData() {
   try {
@@ -247,6 +248,11 @@ function defaultData() {
     denemeler: [],
     haftalikPlan: {},
     calismaKayitlari: [],
+    gunlukHedef: 100,
+    pomodoroSayisi: 0,
+    notlar: {},
+    flashcards: [],
+    hataliSorular: [],
   };
 }
 
@@ -296,13 +302,6 @@ function getBransProgress(brans, konuDurumlari) {
   return total / brans.konular.length;
 }
 
-function getBransProgressColor(pct) {
-  if (pct >= 90) return colors.success;
-  if (pct >= 50) return colors.warning;
-  if (pct > 0) return colors.klinik;
-  return colors.border;
-}
-
 // Calculate average for a dagilim array
 function ortalama(arr) {
   if (!arr || arr.length === 0) return 0;
@@ -316,8 +315,37 @@ const oldRemovedBransIds = [
   "ftr", "halkSagligi", "adliTip", "gogus",
 ];
 
-// ===================== STYLES =====================
-const colors = {
+// Beep sound for pomodoro (short sine wave beep as base64 WAV)
+const BEEP_SOUND = "data:audio/wav;base64,UklGRlQGAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YTAGAAAAAAEAAgADAAQABQAHAAgACgAMAA4AEAASABUAFwAaAB0AIAAjACYAKQAtADAANAA4ADwAQABEAEgATQBRAFYAWgBfAGQAaQBuAHMAdwB8AIEAhgCLAJAAlQCaAJ8ApACpAK4AsgC3ALwAwADFAMoAzgDTANcA3ADgAOQA6QDtAPEA9QD5AP0AAQEFAQkBDQERABUBGAEcAR8BIwEmASoBLQEwATMBNgE5ATsBPgFAAUIBRAFGAUgBSgFLAU0BTgFPAVABUQFRAVIBUgFSAVIBUgFRAVEBUAFPAU4BTQFLAUoBSAFGAUQBQgE/AT0BOgE3ATQBMQEuASsBJwEkASABHAEYARQBEAEMAQgBBAEAAfsA9wDyAO4A6QDlAOAA2wDWANEAzADHAMIAvQC4ALMArgCpAKMAHgCZAJQAjwCKAIUAgAB7AHYAcQBsAGcAYgBdAFgAUwBOAEoARQBAADwANwAzAC8AKgAmACIAHgAaABYAEgAOAAoABwADAAAA/f/6//f/9P/x/+7/6//o/+X/4//g/97/2//Z/9f/1f/T/9H/z//N/8z/yv/J/8f/xv/F/8T/w//C/8H/wf/A/8D/wP/A/8D/wP/A/8H/wf/C/8L/w//E/8X/xv/H/8j/yv/L/83/zv/Q/9L/1P/W/9j/2v/d/9//4v/k/+f/6v/t//D/8//2//n//P///wIABQAIAAsADwASABUAGQAcACAAIwAnACoALgAyADUAOQA9AEEARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHwAgACEAIgAjACQAJQAmACbAJ8AowCmAKoArgCxALQAuAC7AL4AwQDEAMcAygDNANAA0gDVANcA2QDcAN4A4ADiAOQA5QDnAOkA6gDrAO0A7gDvAPAA8QDyAPIA8wDzAPQA9ADzAPQA9ADzAPMA8wDyAPIA8QDwAO8A7gDtAOwA6gDpAOcA5QDjAOEA3wDdANsA2ADWANMA0QDOAMsAyADFAMIAvwC8ALgAtQCxAK4AqgCmAKIAngCaAJYAkgCOAIkAhQCBAHwAdwBzAG4AaQBkAF8AWgBVAFAASwBGAEEAPAA3ADIALQAoACMAHgAZABQADwAKAAUAAAAA/P/3//L/7f/o/+P/3v/Z/9T/z//L/8b/wf+9/7j/tP+v/6v/p/+j/5//m/+X/5P/j/+M/4j/hf+C/3//fP95/3b/c/9x/2//bP9q/2j/Zv9l/2P/Yf9g/1//Xv9d/1z/W/9b/1r/Wv9a/1r/Wv9b/1v/XP9d/17/X/9g/2H/Y/9k/2b/aP9q/2z/bv9x/3P/dv95/3z/f/+C/4X/if+M/5D/k/+X/5v/n/+j/6f/q/+v/7T/uP+9/8H/xv/K/8//1P/Z/97/4//o/+3/8v/3//z/AAAFAAoADwAUABkAHgAjACgALQAyADcAPABBAEYASgBPAFQAWABdAGEAZgBqAG4AcgB2AHoAfgCCAIYAigCNAJEAlACXAJoAnQCgAKMAJgCoAKoArQCvALEAswC0ALYAtwC5ALoAuwC8AL0AvgC+AL8AvwC/AL8AvwC/AL4AvgC9ALwAuwC6ALkAtwC2ALQAsgCwAK4ArACpAKcApACiAJ8AnACZAJYAkgCPAIwAiACFAIEAfQB6AHYAcgBuAGoAZgBiAF4AWgBWAFIATgBKAEYAQgA+ADoANgAyAC4AKgAmACIAHgAaABcAEwAPAAwACAAFAAIAAAAAAA==";
+
+// Image compression helper for hatali sorular
+function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width;
+        let h = img.height;
+        if (w > 800) {
+          h = Math.round((h * 800) / w);
+          w = 800;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.6));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ===================== THEME COLORS =====================
+const lightColors = {
   bg: "#f0f4f0",
   card: "#ffffff",
   cardHover: "#e8f0e8",
@@ -334,210 +362,237 @@ const colors = {
   klinik: "#1565c0",
 };
 
-const baseStyles = {
-  container: {
-    minHeight: "100vh",
-    background: `linear-gradient(135deg, #f0f4f0 0%, #e8f0e8 100%)`,
-    color: colors.text,
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    padding: "0",
-  },
-  header: {
-    background: "linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #43a047 100%)",
-    padding: "20px 24px",
-    borderBottom: `1px solid ${colors.border}`,
-    position: "sticky",
-    top: 0,
-    zIndex: 100,
-    backdropFilter: "blur(12px)",
-  },
-  headerContent: {
-    maxWidth: 1200,
-    margin: "0 auto",
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 800,
-    margin: 0,
-    background: "linear-gradient(135deg, #43a047, #81c784)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  },
-  subtitle: {
-    fontSize: 13,
-    color: "#ffffffcc",
-    margin: "4px 0 0",
-  },
-  nav: {
-    display: "flex",
-    gap: 4,
-    marginTop: 16,
-    overflowX: "auto",
-    paddingBottom: 4,
-    WebkitOverflowScrolling: "touch",
-    scrollbarWidth: "thin",
-  },
-  navBtn: (active) => ({
-    padding: "8px 16px",
-    borderRadius: 8,
-    border: "none",
-    cursor: "pointer",
-    fontSize: 13,
-    fontWeight: 600,
-    background: active ? "rgba(255,255,255,0.25)" : "transparent",
-    color: active ? "#fff" : "#ffffffaa",
-    transition: "all 0.2s",
-    whiteSpace: "nowrap",
-  }),
-  main: {
-    maxWidth: 1200,
-    margin: "0 auto",
-    padding: "24px 16px",
-  },
-  card: {
-    background: colors.card,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
-    border: `1px solid ${colors.border}`,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 700,
-    marginBottom: 16,
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-  },
-  input: {
-    background: colors.inputBg,
-    border: `1px solid ${colors.border}`,
-    borderRadius: 8,
-    padding: "8px 12px",
-    color: colors.text,
-    fontSize: 14,
-    width: "100%",
-    boxSizing: "border-box",
-    outline: "none",
-  },
-  select: {
-    background: colors.inputBg,
-    border: `1px solid ${colors.border}`,
-    borderRadius: 8,
-    padding: "8px 12px",
-    color: colors.text,
-    fontSize: 14,
-    width: "100%",
-    boxSizing: "border-box",
-    outline: "none",
-  },
-  btn: (variant = "primary") => ({
-    padding: "8px 16px",
-    borderRadius: 8,
-    border: "none",
-    cursor: "pointer",
-    fontSize: 13,
-    fontWeight: 600,
-    background: variant === "primary" ? colors.primary : variant === "danger" ? colors.danger : variant === "success" ? colors.success : colors.cardHover,
-    color: "#fff",
-    transition: "all 0.2s",
-  }),
-  grid2: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: 16,
-  },
-  grid3: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-    gap: 12,
-  },
-  badge: (color) => ({
-    display: "inline-block",
-    padding: "2px 8px",
-    borderRadius: 6,
-    fontSize: 11,
-    fontWeight: 600,
-    background: color + "22",
-    color: color,
-  }),
-  progressBar: (pct, color) => ({
-    height: 6,
-    borderRadius: 3,
-    background: colors.border,
-    position: "relative",
-    overflow: "hidden",
-    flex: 1,
-  }),
-  progressFill: (pct, color) => ({
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: `${Math.min(100, pct)}%`,
-    borderRadius: 3,
-    background: color || colors.primary,
-    transition: "width 0.5s ease",
-  }),
-  label: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginBottom: 4,
-    display: "block",
-    fontWeight: 500,
-  },
-  statBox: {
-    textAlign: "center",
-    padding: 16,
-    borderRadius: 10,
-    background: colors.inputBg,
-    minWidth: 100,
-  },
-  statValue: {
-    fontSize: 28,
-    fontWeight: 800,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 4,
-  },
-  deleteBtn: {
-    background: "none",
-    border: "none",
-    color: colors.danger,
-    cursor: "pointer",
-    fontSize: 16,
-    padding: "4px 8px",
-    borderRadius: 4,
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    fontSize: 13,
-    minWidth: 500,
-  },
-  th: {
-    textAlign: "left",
-    padding: "8px 12px",
-    borderBottom: `1px solid ${colors.border}`,
-    color: colors.textMuted,
-    fontWeight: 600,
-    fontSize: 12,
-    whiteSpace: "nowrap",
-  },
-  td: {
-    padding: "10px 12px",
-    borderBottom: `1px solid ${colors.border}22`,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: 200,
-  },
+const darkColors = {
+  bg: "#121a12",
+  card: "#1a2e1a",
+  cardHover: "#243424",
+  primary: "#43a047",
+  primaryHover: "#388e3c",
+  success: "#4caf50",
+  warning: "#ffb300",
+  danger: "#ef5350",
+  text: "#e8f5e9",
+  textMuted: "#81c784",
+  border: "#2e4a2e",
+  inputBg: "#0d160d",
+  temel: "#26a69a",
+  klinik: "#42a5f5",
 };
 
+function getColors(theme) {
+  return theme === "dark" ? darkColors : lightColors;
+}
+
+function getBaseStyles(colors, theme) {
+  return {
+    container: {
+      minHeight: "100vh",
+      background: theme === "dark"
+        ? "linear-gradient(135deg, #121a12 0%, #1a2e1a 100%)"
+        : "linear-gradient(135deg, #f0f4f0 0%, #e8f0e8 100%)",
+      color: colors.text,
+      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      padding: "0",
+    },
+    header: {
+      background: theme === "dark"
+        ? "linear-gradient(135deg, #0d1f0d 0%, #1a3a1a 100%)"
+        : "linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #43a047 100%)",
+      padding: "20px 24px",
+      borderBottom: `1px solid ${colors.border}`,
+      position: "sticky",
+      top: 0,
+      zIndex: 100,
+      backdropFilter: "blur(12px)",
+    },
+    headerContent: {
+      maxWidth: 1200,
+      margin: "0 auto",
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: 800,
+      margin: 0,
+      background: "linear-gradient(135deg, #43a047, #81c784)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+    },
+    subtitle: {
+      fontSize: 13,
+      color: "#ffffffcc",
+      margin: "4px 0 0",
+    },
+    nav: {
+      display: "flex",
+      gap: 4,
+      marginTop: 16,
+      overflowX: "auto",
+      paddingBottom: 4,
+      WebkitOverflowScrolling: "touch",
+      scrollbarWidth: "thin",
+    },
+    navBtn: (active) => ({
+      padding: "8px 16px",
+      borderRadius: 8,
+      border: "none",
+      cursor: "pointer",
+      fontSize: 13,
+      fontWeight: 600,
+      background: active ? "rgba(255,255,255,0.25)" : "transparent",
+      color: active ? "#fff" : "#ffffffaa",
+      transition: "all 0.2s",
+      whiteSpace: "nowrap",
+    }),
+    main: {
+      maxWidth: 1200,
+      margin: "0 auto",
+      padding: "24px 16px",
+    },
+    card: {
+      background: colors.card,
+      borderRadius: 12,
+      padding: 20,
+      marginBottom: 16,
+      border: `1px solid ${colors.border}`,
+    },
+    cardTitle: {
+      fontSize: 16,
+      fontWeight: 700,
+      marginBottom: 16,
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+    },
+    input: {
+      background: colors.inputBg,
+      border: `1px solid ${colors.border}`,
+      borderRadius: 8,
+      padding: "8px 12px",
+      color: colors.text,
+      fontSize: 14,
+      width: "100%",
+      boxSizing: "border-box",
+      outline: "none",
+    },
+    select: {
+      background: colors.inputBg,
+      border: `1px solid ${colors.border}`,
+      borderRadius: 8,
+      padding: "8px 12px",
+      color: colors.text,
+      fontSize: 14,
+      width: "100%",
+      boxSizing: "border-box",
+      outline: "none",
+    },
+    btn: (variant = "primary") => ({
+      padding: "8px 16px",
+      borderRadius: 8,
+      border: "none",
+      cursor: "pointer",
+      fontSize: 13,
+      fontWeight: 600,
+      background: variant === "primary" ? colors.primary : variant === "danger" ? colors.danger : variant === "success" ? colors.success : colors.cardHover,
+      color: "#fff",
+      transition: "all 0.2s",
+    }),
+    grid2: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: 16,
+    },
+    grid3: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+      gap: 12,
+    },
+    badge: (color) => ({
+      display: "inline-block",
+      padding: "2px 8px",
+      borderRadius: 6,
+      fontSize: 11,
+      fontWeight: 600,
+      background: color + "22",
+      color: color,
+    }),
+    progressBar: (pct, color) => ({
+      height: 6,
+      borderRadius: 3,
+      background: colors.border,
+      position: "relative",
+      overflow: "hidden",
+      flex: 1,
+    }),
+    progressFill: (pct, color) => ({
+      position: "absolute",
+      top: 0,
+      left: 0,
+      height: "100%",
+      width: `${Math.min(100, pct)}%`,
+      borderRadius: 3,
+      background: color || colors.primary,
+      transition: "width 0.5s ease",
+    }),
+    label: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginBottom: 4,
+      display: "block",
+      fontWeight: 500,
+    },
+    statBox: {
+      textAlign: "center",
+      padding: 16,
+      borderRadius: 10,
+      background: colors.inputBg,
+      minWidth: 100,
+    },
+    statValue: {
+      fontSize: 28,
+      fontWeight: 800,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 4,
+    },
+    deleteBtn: {
+      background: "none",
+      border: "none",
+      color: colors.danger,
+      cursor: "pointer",
+      fontSize: 16,
+      padding: "4px 8px",
+      borderRadius: 4,
+    },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+      fontSize: 13,
+      minWidth: 500,
+    },
+    th: {
+      textAlign: "left",
+      padding: "8px 12px",
+      borderBottom: `1px solid ${colors.border}`,
+      color: colors.textMuted,
+      fontWeight: 600,
+      fontSize: 12,
+      whiteSpace: "nowrap",
+    },
+    td: {
+      padding: "10px 12px",
+      borderBottom: `1px solid ${colors.border}22`,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      maxWidth: 200,
+    },
+  };
+}
+
 // ===================== MINI CHART (SVG Bar) =====================
-function MiniBarChart({ data, height = 120, barColor = colors.primary }) {
+function MiniBarChart({ data, height = 120, barColor, colors }) {
   if (!data || data.length === 0) return <div style={{ color: colors.textMuted, fontSize: 13 }}>Henüz veri yok</div>;
   const max = Math.max(...data.map(d => d.value), 1);
   const barW = Math.min(32, Math.floor(280 / data.length) - 4);
@@ -548,7 +603,7 @@ function MiniBarChart({ data, height = 120, barColor = colors.primary }) {
         const h = (d.value / max) * height;
         return (
           <g key={i}>
-            <rect x={i * (barW + 4)} y={height - h} width={barW} height={h} rx={3} fill={d.color || barColor} opacity={0.85} />
+            <rect x={i * (barW + 4)} y={height - h} width={barW} height={h} rx={3} fill={d.color || barColor || colors.primary} opacity={0.85} />
             <text x={i * (barW + 4) + barW / 2} y={height - h - 4} textAnchor="middle" fill={colors.textMuted} fontSize={10}>{d.value.toFixed(1)}</text>
             <text x={i * (barW + 4) + barW / 2} y={height + 14} textAnchor="middle" fill={colors.textMuted} fontSize={9}>{d.label}</text>
           </g>
@@ -558,7 +613,7 @@ function MiniBarChart({ data, height = 120, barColor = colors.primary }) {
   );
 }
 
-function MiniLineChart({ data, height = 100, color = colors.primary }) {
+function MiniLineChart({ data, height = 100, color, colors }) {
   if (!data || data.length < 2) return <div style={{ color: colors.textMuted, fontSize: 13 }}>En az 2 veri noktası gerekli</div>;
   const max = Math.max(...data.map(d => d.value), 1);
   const min = Math.min(...data.map(d => d.value), 0);
@@ -568,10 +623,10 @@ function MiniLineChart({ data, height = 100, color = colors.primary }) {
   const points = data.map((d, i) => `${i * stepX},${height - ((d.value - min) / range) * (height - 10)}`).join(" ");
   return (
     <svg width="100%" height={height + 24} viewBox={`0 0 ${w} ${height + 24}`} style={{ overflow: "visible" }}>
-      <polyline points={points} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={points} fill="none" stroke={color || colors.primary} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
       {data.map((d, i) => (
         <g key={i}>
-          <circle cx={i * stepX} cy={height - ((d.value - min) / range) * (height - 10)} r={3} fill={color} />
+          <circle cx={i * stepX} cy={height - ((d.value - min) / range) * (height - 10)} r={3} fill={color || colors.primary} />
           <text x={i * stepX} y={height + 16} textAnchor="middle" fill={colors.textMuted} fontSize={9}>{d.label}</text>
         </g>
       ))}
@@ -582,7 +637,7 @@ function MiniLineChart({ data, height = 100, color = colors.primary }) {
 // ===================== COMPONENTS =====================
 
 // --- Dashboard ---
-function Dashboard({ data, setData }) {
+function Dashboard({ data, setData, colors, baseStyles }) {
   const kalan = kalanGun(data.sinavTarihi);
   const toplamSoru = data.soruCozumleri.reduce((s, c) => s + c.dogru + c.yanlis + (c.bos || 0), 0);
   const toplamDogru = data.soruCozumleri.reduce((s, c) => s + c.dogru, 0);
@@ -596,6 +651,110 @@ function Dashboard({ data, setData }) {
 
   const calismaSuresi = data.calismaKayitlari.reduce((s, c) => s + (c.sure || 0), 0);
   const saatStr = (calismaSuresi / 60).toFixed(0);
+
+  // Gunluk hedef
+  const bugunStr = new Date().toISOString().slice(0, 10);
+  const bugunSoru = data.soruCozumleri.filter(s => s.tarih === bugunStr).reduce((s, c) => s + c.dogru + c.yanlis + (c.bos || 0), 0);
+  const hedefYuzde = data.gunlukHedef > 0 ? Math.min(100, (bugunSoru / data.gunlukHedef) * 100) : 0;
+
+  // Streak hesaplama
+  const streak = useMemo(() => {
+    const tarihSet = new Set();
+    data.soruCozumleri.forEach(s => tarihSet.add(s.tarih));
+    const sortedDates = [...tarihSet].sort();
+    let current = 0;
+    let best = 0;
+    // Check from today backwards
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let checkDate = new Date(today);
+    // Check if today has questions, if not start from yesterday
+    const todayStr = checkDate.toISOString().slice(0, 10);
+    if (!tarihSet.has(todayStr)) {
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+    while (true) {
+      const ds = checkDate.toISOString().slice(0, 10);
+      if (tarihSet.has(ds)) {
+        current++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    // Best streak from all dates
+    if (sortedDates.length > 0) {
+      let tempStreak = 1;
+      for (let i = 1; i < sortedDates.length; i++) {
+        const prev = new Date(sortedDates[i - 1]);
+        const curr = new Date(sortedDates[i]);
+        const diff = Math.round((curr - prev) / (1000 * 60 * 60 * 24));
+        if (diff === 1) {
+          tempStreak++;
+        } else {
+          best = Math.max(best, tempStreak);
+          tempStreak = 1;
+        }
+      }
+      best = Math.max(best, tempStreak);
+    }
+    best = Math.max(best, current);
+    return { current, best };
+  }, [data.soruCozumleri]);
+
+  // Zayıf konu onerileri
+  const zayifKonular = useMemo(() => {
+    const bransStats = tumBranslar.map(b => {
+      const kayitlar = data.soruCozumleri.filter(s => s.bransId === b.id);
+      const topDogru = kayitlar.reduce((s, c) => s + c.dogru, 0);
+      const topYanlis = kayitlar.reduce((s, c) => s + c.yanlis, 0);
+      const topBos = kayitlar.reduce((s, c) => s + (c.bos || 0), 0);
+      const topSoru = topDogru + topYanlis + topBos;
+      const basari = topSoru > 0 ? (topDogru / topSoru) * 100 : -1;
+      return { ...b, topSoru, basari };
+    }).filter(b => b.topSoru >= 5);
+    return bransStats.sort((a, b) => a.basari - b.basari).slice(0, 3);
+  }, [data.soruCozumleri]);
+
+  // Export/Import
+  const exportData = () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tus-takip-yedek-${bugunStr}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importData = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (parsed && typeof parsed === "object" && parsed.sinavTarihi) {
+          if (confirm("Mevcut veriler yeni verilerle değiştirilecek. Emin misiniz?")) {
+            setData(parsed);
+          }
+        } else {
+          alert("Geçersiz yedek dosyası!");
+        }
+      } catch {
+        alert("Dosya okunamadı! Geçerli bir JSON dosyası seçin.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const getBransProgressColor = (pct) => {
+    if (pct >= 90) return colors.success;
+    if (pct >= 50) return colors.warning;
+    if (pct > 0) return colors.klinik;
+    return colors.border;
+  };
 
   return (
     <div>
@@ -637,6 +796,70 @@ function Dashboard({ data, setData }) {
         ))}
       </div>
 
+      {/* Gunluk Hedef + Streak */}
+      <div style={baseStyles.grid2}>
+        <div style={baseStyles.card}>
+          <div style={baseStyles.cardTitle}>Günlük Hedef</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <label style={{ fontSize: 12, color: colors.textMuted, whiteSpace: "nowrap" }}>Hedef:</label>
+            <input type="number" min={1} value={data.gunlukHedef} onChange={e => setData(d => ({ ...d, gunlukHedef: Math.max(1, Number(e.target.value) || 1) }))} style={{ ...baseStyles.input, width: 80 }} />
+            <span style={{ fontSize: 12, color: colors.textMuted }}>soru/gün</span>
+          </div>
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 4 }}>
+              <span>Bugün: <strong>{bugunSoru}</strong> / {data.gunlukHedef} soru</span>
+              <span style={{ fontWeight: 700, color: hedefYuzde >= 100 ? colors.success : colors.primary }}>%{hedefYuzde.toFixed(0)}</span>
+            </div>
+            <div style={{ height: 10, borderRadius: 5, background: colors.border, overflow: "hidden" }}>
+              <div style={{ height: "100%", borderRadius: 5, width: `${Math.min(100, hedefYuzde)}%`, background: hedefYuzde >= 100 ? colors.success : colors.primary, transition: "width 0.5s ease" }} />
+            </div>
+          </div>
+          {hedefYuzde >= 100 && <div style={{ fontSize: 13, color: colors.success, fontWeight: 600, textAlign: "center", marginTop: 8 }}>Günlük hedefe ulaştın! Tebrikler!</div>}
+        </div>
+        <div style={baseStyles.card}>
+          <div style={baseStyles.cardTitle}>Çalışma Serisi</div>
+          <div style={{ display: "flex", gap: 20, justifyContent: "center", alignItems: "center" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 36, fontWeight: 900, color: streak.current > 0 ? colors.warning : colors.textMuted }}>
+                {streak.current > 0 ? "\u{1F525}" : ""} {streak.current}
+              </div>
+              <div style={{ fontSize: 12, color: colors.textMuted }}>Mevcut Seri</div>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 36, fontWeight: 900, color: colors.primary }}>
+                {streak.best}
+              </div>
+              <div style={{ fontSize: 12, color: colors.textMuted }}>En İyi Seri</div>
+            </div>
+          </div>
+          <div style={{ fontSize: 12, color: colors.textMuted, textAlign: "center", marginTop: 8 }}>
+            Art arda en az 1 soru çözülen gün sayısı
+          </div>
+        </div>
+      </div>
+
+      {/* Zayif Konu Onerileri */}
+      <div style={baseStyles.card}>
+        <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Bugün Şu Konulara Odaklan</div>
+        {zayifKonular.length === 0 ? (
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 12 }}>
+            Daha fazla soru çözdükçe sana özel öneriler burada görünecek. Devam et!
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+            {zayifKonular.map((b, i) => (
+              <div key={b.id} style={{ padding: "10px 16px", borderRadius: 8, background: colors.danger + "15", border: `1px solid ${colors.danger}33`, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 18 }}>{b.icon}</span>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600 }}>{b.name}</div>
+                  <div style={{ fontSize: 11, color: colors.textMuted }}>{b.topSoru} soru - %{b.basari.toFixed(0)} başarı</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Son Denemeler */}
       {sonDenemeler.length > 0 && (
         <div style={baseStyles.card}>
@@ -647,6 +870,7 @@ function Dashboard({ data, setData }) {
               label: new Date(d.tarih).toLocaleDateString("tr-TR", { day: "numeric", month: "short" }),
             }))}
             color={colors.success}
+            colors={colors}
           />
         </div>
       )}
@@ -688,12 +912,24 @@ function Dashboard({ data, setData }) {
           })}
         </div>
       </div>
+
+      {/* Veri Yedekleme */}
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>Veri Yedekleme</div>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+          <button onClick={exportData} style={baseStyles.btn("primary")}>Verileri Dışa Aktar (JSON)</button>
+          <label style={{ ...baseStyles.btn("success"), display: "inline-block", cursor: "pointer" }}>
+            Verileri İçe Aktar
+            <input type="file" accept=".json" onChange={importData} style={{ display: "none" }} />
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
 
 // --- Konu Takibi (Enhanced with subtopics) ---
-function KonuTakibi({ data, setData }) {
+function KonuTakibi({ data, setData, colors, baseStyles }) {
   const [expandedBrans, setExpandedBrans] = useState({});
 
   const durumlar = [
@@ -712,6 +948,13 @@ function KonuTakibi({ data, setData }) {
 
   const toggleExpand = (bransId) => {
     setExpandedBrans(prev => ({ ...prev, [bransId]: !prev[bransId] }));
+  };
+
+  const getBransProgressColor = (pct) => {
+    if (pct >= 90) return colors.success;
+    if (pct >= 50) return colors.warning;
+    if (pct > 0) return colors.klinik;
+    return colors.border;
   };
 
   const renderBransGrubu = (baslik, branslar, renk) => (
@@ -853,8 +1096,8 @@ function KonuTakibi({ data, setData }) {
   );
 }
 
-// --- Soru Dagilimi (NEW - Heatmap) ---
-function SoruDagilimi() {
+// --- Soru Dagilimi (Heatmap) ---
+function SoruDagilimi({ colors, baseStyles }) {
   const [selectedBrans, setSelectedBrans] = useState(branslarWithKonular[0]?.id || "");
 
   const brans = tumBranslar.find(b => b.id === selectedBrans);
@@ -862,7 +1105,6 @@ function SoruDagilimi() {
   const getHeatmapColor = (value, maxVal) => {
     if (value === 0) return "transparent";
     const intensity = Math.min(1, value / Math.max(maxVal, 1));
-    // Green gradient
     const r = Math.round(46 + intensity * (27 - 46));
     const g = Math.round(125 + intensity * (94 - 125));
     const b_val = Math.round(50 + intensity * (32 - 50));
@@ -872,7 +1114,6 @@ function SoruDagilimi() {
 
   if (!brans || !brans.konular) return null;
 
-  // Find max value for color scaling
   const allValues = brans.konular.flatMap(k => k.dagilim);
   const maxVal = Math.max(...allValues, 1);
 
@@ -994,7 +1235,7 @@ function SoruDagilimi() {
 
       {/* High Yield Summary */}
       <div style={baseStyles.card}>
-        <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Yüksek Verimli Konular (Ort. ≥ 2.5 soru)</div>
+        <div style={{ ...baseStyles.cardTitle, color: colors.warning }}>Yüksek Verimli Konular (Ort. &ge; 2.5 soru)</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {brans.konular
             .filter(k => ortalama(k.dagilim) >= 2.5)
@@ -1022,7 +1263,7 @@ function SoruDagilimi() {
 }
 
 // --- Soru Cozumu ---
-function SoruCozumu({ data, setData }) {
+function SoruCozumu({ data, setData, colors, baseStyles }) {
   const [form, setForm] = useState({ bransId: tumBranslar[0].id, konuAdi: "", dogru: "", yanlis: "", bos: "", kaynak: "", tarih: new Date().toISOString().slice(0, 10) });
 
   const selectedBrans = tumBranslar.find(b => b.id === form.bransId);
@@ -1041,7 +1282,6 @@ function SoruCozumu({ data, setData }) {
     setData(d => ({ ...d, soruCozumleri: d.soruCozumleri.filter(s => s.id !== id) }));
   };
 
-  // Son 7 gun soru cozum grafigi
   const son7 = useMemo(() => {
     const gunler = [];
     for (let i = 6; i >= 0; i--) {
@@ -1116,7 +1356,7 @@ function SoruCozumu({ data, setData }) {
       {/* Son 7 gun grafigi */}
       <div style={baseStyles.card}>
         <div style={baseStyles.cardTitle}>Son 7 Gün Soru Çözümü</div>
-        <MiniBarChart data={son7} barColor={colors.primary} />
+        <MiniBarChart data={son7} barColor={colors.primary} colors={colors} />
       </div>
 
       {/* Kayitlar */}
@@ -1167,7 +1407,7 @@ function SoruCozumu({ data, setData }) {
 }
 
 // --- Denemeler ---
-function Denemeler({ data, setData }) {
+function Denemeler({ data, setData, colors, baseStyles }) {
   const [form, setForm] = useState({
     ad: "",
     tarih: new Date().toISOString().slice(0, 10),
@@ -1277,7 +1517,7 @@ function Denemeler({ data, setData }) {
       {lineData.length >= 2 && (
         <div style={baseStyles.card}>
           <div style={baseStyles.cardTitle}>Net İlerleme Grafiği</div>
-          <MiniLineChart data={lineData} color={colors.success} />
+          <MiniLineChart data={lineData} color={colors.success} colors={colors} />
         </div>
       )}
 
@@ -1320,7 +1560,7 @@ function Denemeler({ data, setData }) {
 }
 
 // --- Calisma Plani ---
-function CalismePlani({ data, setData }) {
+function CalismePlani({ data, setData, colors, baseStyles }) {
   const [form, setForm] = useState({ gun: haftaGunleri[0], bransId: tumBranslar[0].id, sure: 60, not: "" });
 
   const ekle = () => {
@@ -1422,7 +1662,7 @@ function CalismePlani({ data, setData }) {
 }
 
 // --- Calisma Kaydi ---
-function CalismaKaydi({ data, setData }) {
+function CalismaKaydi({ data, setData, colors, baseStyles }) {
   const [form, setForm] = useState({ bransId: tumBranslar[0].id, sure: 60, tarih: new Date().toISOString().slice(0, 10), not: "" });
 
   const ekle = () => {
@@ -1437,7 +1677,6 @@ function CalismaKaydi({ data, setData }) {
     setData(d => ({ ...d, calismaKayitlari: d.calismaKayitlari.filter(x => x.id !== id) }));
   };
 
-  // Son 7 gun calisma
   const son7 = useMemo(() => {
     const gunler = [];
     for (let i = 6; i >= 0; i--) {
@@ -1449,7 +1688,7 @@ function CalismaKaydi({ data, setData }) {
       gunler.push({ label, value: topSure / 60, color: topSure >= 240 ? colors.success : topSure >= 120 ? colors.warning : colors.danger });
     }
     return gunler;
-  }, [data.calismaKayitlari]);
+  }, [data.calismaKayitlari, colors]);
 
   return (
     <div>
@@ -1487,7 +1726,7 @@ function CalismaKaydi({ data, setData }) {
 
       <div style={baseStyles.card}>
         <div style={baseStyles.cardTitle}>Son 7 Gün Çalışma (saat)</div>
-        <MiniBarChart data={son7} height={100} />
+        <MiniBarChart data={son7} height={100} colors={colors} />
       </div>
 
       <div style={baseStyles.card}>
@@ -1528,8 +1767,556 @@ function CalismaKaydi({ data, setData }) {
   );
 }
 
+// --- Pomodoro Zamanlayici ---
+function PomodoroTimer({ data, setData, colors, baseStyles }) {
+  const WORK_TIME = 25 * 60;
+  const SHORT_BREAK = 5 * 60;
+  const LONG_BREAK = 15 * 60;
+
+  const [secondsLeft, setSecondsLeft] = useState(WORK_TIME);
+  const [isRunning, setIsRunning] = useState(false);
+  const [sessionType, setSessionType] = useState("work"); // work, shortBreak, longBreak
+  const [pomodoroCount, setPomodoroCount] = useState(0);
+  const [selectedBrans, setSelectedBrans] = useState(tumBranslar[0].id);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setSecondsLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(intervalRef.current);
+            // Play beep
+            try { new Audio(BEEP_SOUND).play(); } catch (e) { /* ignore */ }
+            // Session ended
+            if (sessionType === "work") {
+              const newCount = pomodoroCount + 1;
+              setPomodoroCount(newCount);
+              // Add to calisma kaydi
+              const bugun = new Date().toISOString().slice(0, 10);
+              const yeniKayit = { id: Date.now(), bransId: selectedBrans, sure: 25, tarih: bugun, not: "Pomodoro" };
+              setData(d => ({
+                ...d,
+                calismaKayitlari: [yeniKayit, ...d.calismaKayitlari],
+                pomodoroSayisi: (d.pomodoroSayisi || 0) + 1,
+              }));
+              // Determine next break
+              if (newCount % 4 === 0) {
+                setSessionType("longBreak");
+                setIsRunning(false);
+                return LONG_BREAK;
+              } else {
+                setSessionType("shortBreak");
+                setIsRunning(false);
+                return SHORT_BREAK;
+              }
+            } else {
+              // Break ended, start work
+              setSessionType("work");
+              setIsRunning(false);
+              return WORK_TIME;
+            }
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning, sessionType, pomodoroCount, selectedBrans, setData]);
+
+  const toggleRunning = () => setIsRunning(!isRunning);
+
+  const reset = () => {
+    setIsRunning(false);
+    clearInterval(intervalRef.current);
+    setSessionType("work");
+    setSecondsLeft(WORK_TIME);
+    setPomodoroCount(0);
+  };
+
+  const mins = Math.floor(secondsLeft / 60);
+  const secs = secondsLeft % 60;
+
+  const sessionLabel = sessionType === "work" ? "Çalışma" : sessionType === "shortBreak" ? "Kısa Mola" : "Uzun Mola";
+  const sessionColor = sessionType === "work" ? colors.primary : sessionType === "shortBreak" ? colors.success : colors.warning;
+  const totalTime = sessionType === "work" ? WORK_TIME : sessionType === "shortBreak" ? SHORT_BREAK : LONG_BREAK;
+  const progress = ((totalTime - secondsLeft) / totalTime) * 100;
+
+  return (
+    <div>
+      <div style={{ ...baseStyles.card, textAlign: "center", padding: 32 }}>
+        <div style={{ fontSize: 14, color: colors.textMuted, marginBottom: 8 }}>{sessionLabel}</div>
+        <div style={{ fontSize: 72, fontWeight: 900, color: sessionColor, fontVariantNumeric: "tabular-nums" }}>
+          {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+        </div>
+        <div style={{ height: 8, borderRadius: 4, background: colors.border, margin: "16px auto", maxWidth: 300, overflow: "hidden" }}>
+          <div style={{ height: "100%", borderRadius: 4, width: `${progress}%`, background: sessionColor, transition: "width 1s linear" }} />
+        </div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: colors.textMuted, marginBottom: 16 }}>
+          {pomodoroCount % 4}/4 pomodoro (Toplam: {pomodoroCount})
+        </div>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", marginBottom: 16 }}>
+          <button onClick={toggleRunning} style={baseStyles.btn(isRunning ? "danger" : "primary")}>
+            {isRunning ? "Duraklat" : "Başlat"}
+          </button>
+          <button onClick={reset} style={baseStyles.btn("ghost")}>Sıfırla</button>
+        </div>
+        <div style={{ maxWidth: 300, margin: "0 auto" }}>
+          <label style={baseStyles.label}>Çalışılan Branş</label>
+          <select value={selectedBrans} onChange={e => setSelectedBrans(e.target.value)} style={baseStyles.select}>
+            <optgroup label="Temel Tıp">
+              {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+            </optgroup>
+            <optgroup label="Klinik Tıp">
+              {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>Pomodoro İstatistikleri</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12 }}>
+          <div style={baseStyles.statBox}>
+            <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.primary }}>{data.pomodoroSayisi || 0}</div>
+            <div style={baseStyles.statLabel}>Toplam Pomodoro</div>
+          </div>
+          <div style={baseStyles.statBox}>
+            <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.success }}>{((data.pomodoroSayisi || 0) * 25 / 60).toFixed(1)} sa</div>
+            <div style={baseStyles.statLabel}>Toplam Süre</div>
+          </div>
+          <div style={baseStyles.statBox}>
+            <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.warning }}>{pomodoroCount}</div>
+            <div style={baseStyles.statLabel}>Bu Oturum</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Not Defteri ---
+function NotDefteri({ data, setData, colors, baseStyles }) {
+  const [selectedBrans, setSelectedBrans] = useState("");
+  const [selectedKonu, setSelectedKonu] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editingKey, setEditingKey] = useState(null);
+  const [editText, setEditText] = useState("");
+
+  const brans = tumBranslar.find(b => b.id === selectedBrans);
+  const notlar = data.notlar || {};
+
+  const getNoteKey = () => {
+    if (!selectedBrans) return null;
+    return selectedKonu ? `${selectedBrans}_${selectedKonu}` : selectedBrans;
+  };
+
+  const saveNote = () => {
+    const key = editingKey;
+    if (!key) return;
+    setData(d => ({
+      ...d,
+      notlar: { ...d.notlar, [key]: { text: editText, tarih: new Date().toISOString() } },
+    }));
+    setEditingKey(null);
+    setEditText("");
+  };
+
+  const deleteNote = (key) => {
+    const updated = { ...notlar };
+    delete updated[key];
+    setData(d => ({ ...d, notlar: updated }));
+  };
+
+  const startEdit = () => {
+    const key = getNoteKey();
+    if (!key) return;
+    const existing = notlar[key];
+    setEditingKey(key);
+    setEditText(existing ? existing.text : "");
+  };
+
+  const allNoteKeys = Object.keys(notlar).filter(k => {
+    if (!searchTerm) return true;
+    const note = notlar[k];
+    return k.toLowerCase().includes(searchTerm.toLowerCase()) || (note.text && note.text.toLowerCase().includes(searchTerm.toLowerCase()));
+  });
+
+  const getNoteLabel = (key) => {
+    const parts = key.split("_");
+    const b = tumBranslar.find(x => x.id === parts[0]);
+    if (parts.length > 1) {
+      return `${b ? b.icon + " " + b.name : parts[0]} > ${parts.slice(1).join("_")}`;
+    }
+    return b ? `${b.icon} ${b.name}` : key;
+  };
+
+  return (
+    <div>
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>Not Ekle / Düzenle</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 12 }}>
+          <div>
+            <label style={baseStyles.label}>Branş</label>
+            <select value={selectedBrans} onChange={e => { setSelectedBrans(e.target.value); setSelectedKonu(""); }} style={baseStyles.select}>
+              <option value="">Seçiniz...</option>
+              <optgroup label="Temel Tıp">
+                {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+              </optgroup>
+              <optgroup label="Klinik Tıp">
+                {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+              </optgroup>
+            </select>
+          </div>
+          {brans && brans.konular && brans.konular.length > 0 && (
+            <div>
+              <label style={baseStyles.label}>Alt Konu (İsteğe bağlı)</label>
+              <select value={selectedKonu} onChange={e => setSelectedKonu(e.target.value)} style={baseStyles.select}>
+                <option value="">Genel Not</option>
+                {brans.konular.map((k, i) => <option key={i} value={k.name}>{k.name}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
+        {selectedBrans && !editingKey && (
+          <button onClick={startEdit} style={baseStyles.btn("primary")}>
+            {notlar[getNoteKey()] ? "Notu Düzenle" : "Yeni Not Yaz"}
+          </button>
+        )}
+        {editingKey && (
+          <div style={{ marginTop: 12 }}>
+            <textarea
+              value={editText}
+              onChange={e => setEditText(e.target.value)}
+              style={{ ...baseStyles.input, minHeight: 200, resize: "vertical", fontFamily: "inherit" }}
+              placeholder="Notlarınızı buraya yazın..."
+            />
+            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              <button onClick={saveNote} style={baseStyles.btn("success")}>Kaydet</button>
+              <button onClick={() => setEditingKey(null)} style={baseStyles.btn("ghost")}>İptal</button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>Tüm Notlar ({allNoteKeys.length})</div>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          style={{ ...baseStyles.input, marginBottom: 12 }}
+          placeholder="Notlarda ara..."
+        />
+        {allNoteKeys.length === 0 ? (
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz not eklenmedi</div>
+        ) : allNoteKeys.map(key => {
+          const note = notlar[key];
+          return (
+            <div key={key} style={{ padding: 12, marginBottom: 8, background: colors.inputBg, borderRadius: 8, border: `1px solid ${colors.border}` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <div style={{ fontWeight: 600, fontSize: 13 }}>{getNoteLabel(key)}</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ fontSize: 10, color: colors.textMuted }}>{note.tarih ? formatDate(note.tarih) : ""}</span>
+                  <button onClick={() => { setEditingKey(key); setEditText(note.text); }} style={{ ...baseStyles.deleteBtn, color: colors.primary, fontSize: 12 }}>Düzenle</button>
+                  <button onClick={() => deleteNote(key)} style={baseStyles.deleteBtn}>×</button>
+                </div>
+              </div>
+              <div style={{ fontSize: 13, color: colors.text, whiteSpace: "pre-wrap", maxHeight: 150, overflow: "auto" }}>{note.text}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// --- Flashcard / Bilgi Kartlari ---
+function FlashcardTab({ data, setData, colors, baseStyles }) {
+  const [form, setForm] = useState({ bransId: tumBranslar[0].id, front: "", back: "" });
+  const [studyMode, setStudyMode] = useState(false);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [filterBrans, setFilterBrans] = useState("");
+
+  const flashcards = data.flashcards || [];
+  const filteredCards = filterBrans ? flashcards.filter(c => c.bransId === filterBrans) : flashcards;
+  const studyCards = filteredCards.filter(c => !c.biliyor);
+
+  const addCard = () => {
+    if (!form.front.trim() || !form.back.trim()) return;
+    const yeni = { id: Date.now(), bransId: form.bransId, front: form.front, back: form.back, biliyor: false, tarih: new Date().toISOString().slice(0, 10) };
+    setData(d => ({ ...d, flashcards: [yeni, ...(d.flashcards || [])] }));
+    setForm(f => ({ ...f, front: "", back: "" }));
+  };
+
+  const deleteCard = (id) => {
+    setData(d => ({ ...d, flashcards: (d.flashcards || []).filter(c => c.id !== id) }));
+  };
+
+  const markCard = (id, biliyor) => {
+    setData(d => ({
+      ...d,
+      flashcards: (d.flashcards || []).map(c => c.id === id ? { ...c, biliyor } : c),
+    }));
+    setFlipped(false);
+    setCurrentIdx(prev => Math.min(prev, studyCards.length - 2));
+  };
+
+  const totalCards = flashcards.length;
+  const knownCards = flashcards.filter(c => c.biliyor).length;
+  const unknownCards = totalCards - knownCards;
+
+  return (
+    <div>
+      {!studyMode ? (
+        <>
+          <div style={baseStyles.card}>
+            <div style={baseStyles.cardTitle}>Yeni Kart Ekle</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+              <div>
+                <label style={baseStyles.label}>Branş</label>
+                <select value={form.bransId} onChange={e => setForm(f => ({ ...f, bransId: e.target.value }))} style={baseStyles.select}>
+                  <optgroup label="Temel Tıp">
+                    {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+                  </optgroup>
+                  <optgroup label="Klinik Tıp">
+                    {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+                  </optgroup>
+                </select>
+              </div>
+              <div>
+                <label style={baseStyles.label}>Ön Yüz (Soru)</label>
+                <textarea value={form.front} onChange={e => setForm(f => ({ ...f, front: e.target.value }))} style={{ ...baseStyles.input, minHeight: 60, resize: "vertical" }} placeholder="Soru..." />
+              </div>
+              <div>
+                <label style={baseStyles.label}>Arka Yüz (Cevap)</label>
+                <textarea value={form.back} onChange={e => setForm(f => ({ ...f, back: e.target.value }))} style={{ ...baseStyles.input, minHeight: 60, resize: "vertical" }} placeholder="Cevap..." />
+              </div>
+            </div>
+            <div style={{ marginTop: 12, textAlign: "right" }}>
+              <button onClick={addCard} style={baseStyles.btn("primary")}>Kart Ekle</button>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 12, marginBottom: 16 }}>
+            <div style={baseStyles.statBox}>
+              <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.primary }}>{totalCards}</div>
+              <div style={baseStyles.statLabel}>Toplam Kart</div>
+            </div>
+            <div style={baseStyles.statBox}>
+              <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.success }}>{knownCards}</div>
+              <div style={baseStyles.statLabel}>Biliyorum</div>
+            </div>
+            <div style={baseStyles.statBox}>
+              <div style={{ ...baseStyles.statValue, fontSize: 24, color: colors.danger }}>{unknownCards}</div>
+              <div style={baseStyles.statLabel}>Tekrar Et</div>
+            </div>
+          </div>
+
+          {studyCards.length > 0 && (
+            <div style={{ textAlign: "center", marginBottom: 16 }}>
+              <button onClick={() => { setStudyMode(true); setCurrentIdx(0); setFlipped(false); }} style={baseStyles.btn("success")}>
+                Çalışmaya Başla ({studyCards.length} kart)
+              </button>
+            </div>
+          )}
+
+          {/* Filter and list */}
+          <div style={baseStyles.card}>
+            <div style={baseStyles.cardTitle}>Tüm Kartlar</div>
+            <select value={filterBrans} onChange={e => setFilterBrans(e.target.value)} style={{ ...baseStyles.select, marginBottom: 12, maxWidth: 300 }}>
+              <option value="">Tüm Branşlar</option>
+              {tumBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+            </select>
+            {filteredCards.length === 0 ? (
+              <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz kart eklenmedi</div>
+            ) : filteredCards.map(c => {
+              const b = tumBranslar.find(x => x.id === c.bransId);
+              return (
+                <div key={c.id} style={{ padding: 12, marginBottom: 8, background: colors.inputBg, borderRadius: 8, border: `1px solid ${colors.border}`, display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 11, color: colors.textMuted, marginBottom: 4 }}>{b ? `${b.icon} ${b.name}` : ""} {c.biliyor ? "- Biliyorum" : "- Tekrar Et"}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{c.front}</div>
+                    <div style={{ fontSize: 12, color: colors.textMuted }}>{c.back}</div>
+                  </div>
+                  <button onClick={() => deleteCard(c.id)} style={baseStyles.deleteBtn}>×</button>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <div style={{ ...baseStyles.card, textAlign: "center", padding: 32 }}>
+          {studyCards.length === 0 || currentIdx >= studyCards.length ? (
+            <div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: colors.success, marginBottom: 16 }}>Tebrikler! Tüm kartları tamamladın!</div>
+              <button onClick={() => setStudyMode(false)} style={baseStyles.btn("primary")}>Geri Dön</button>
+            </div>
+          ) : (
+            <>
+              <div style={{ fontSize: 13, color: colors.textMuted, marginBottom: 8 }}>Kart {currentIdx + 1} / {studyCards.length}</div>
+              <div
+                onClick={() => setFlipped(!flipped)}
+                style={{
+                  padding: 32, borderRadius: 16, minHeight: 150, display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer", fontSize: 18, fontWeight: 600,
+                  background: flipped ? colors.success + "15" : colors.primary + "15",
+                  border: `2px solid ${flipped ? colors.success : colors.primary}`,
+                  transition: "all 0.3s",
+                }}
+              >
+                {flipped ? studyCards[currentIdx].back : studyCards[currentIdx].front}
+              </div>
+              <div style={{ fontSize: 12, color: colors.textMuted, marginTop: 8 }}>Çevirmek için kartına tıkla</div>
+              {flipped && (
+                <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16 }}>
+                  <button onClick={() => markCard(studyCards[currentIdx].id, true)} style={baseStyles.btn("success")}>Biliyorum</button>
+                  <button onClick={() => { setFlipped(false); setCurrentIdx(prev => Math.min(prev + 1, studyCards.length - 1)); }} style={baseStyles.btn("danger")}>Tekrar Et</button>
+                </div>
+              )}
+              <div style={{ marginTop: 16 }}>
+                <button onClick={() => setStudyMode(false)} style={baseStyles.btn("ghost")}>Çalışmayı Bitir</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Hatali Sorular Defteri ---
+function HataliSorular({ data, setData, colors, baseStyles }) {
+  const [form, setForm] = useState({ bransId: tumBranslar[0].id, konuAdi: "", kaynak: "", not: "", foto: null });
+  const [expandedId, setExpandedId] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const selectedBrans = tumBranslar.find(b => b.id === form.bransId);
+
+  const handlePhoto = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const compressed = await compressImage(file);
+    setForm(f => ({ ...f, foto: compressed }));
+  };
+
+  const ekle = () => {
+    if (!form.not.trim() && !form.kaynak.trim()) return;
+    const yeni = {
+      id: Date.now(),
+      bransId: form.bransId,
+      konuAdi: form.konuAdi || "",
+      kaynak: form.kaynak,
+      not: form.not,
+      foto: form.foto,
+      tarih: new Date().toISOString().slice(0, 10),
+    };
+    setData(d => ({ ...d, hataliSorular: [yeni, ...(d.hataliSorular || [])] }));
+    setForm(f => ({ ...f, konuAdi: "", kaynak: "", not: "", foto: null }));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const sil = (id) => {
+    setData(d => ({ ...d, hataliSorular: (d.hataliSorular || []).filter(x => x.id !== id) }));
+  };
+
+  const hataliSorular = data.hataliSorular || [];
+
+  return (
+    <div>
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>Hatalı Soru Ekle</div>
+        <div style={{ padding: "8px 12px", marginBottom: 12, borderRadius: 8, background: colors.warning + "15", border: `1px solid ${colors.warning}33`, fontSize: 12, color: colors.warning }}>
+          Not: Fotoğraflar localStorage'da saklanır (~5MB limit). Görüntüler otomatik sıkıştırılır.
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          <div>
+            <label style={baseStyles.label}>Branş</label>
+            <select value={form.bransId} onChange={e => setForm(f => ({ ...f, bransId: e.target.value, konuAdi: "" }))} style={baseStyles.select}>
+              <optgroup label="Temel Tıp">
+                {temelBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+              </optgroup>
+              <optgroup label="Klinik Tıp">
+                {klinikBranslar.map(b => <option key={b.id} value={b.id}>{b.icon} {b.name}</option>)}
+              </optgroup>
+            </select>
+          </div>
+          {selectedBrans && selectedBrans.konular && selectedBrans.konular.length > 0 && (
+            <div>
+              <label style={baseStyles.label}>Alt Konu</label>
+              <select value={form.konuAdi} onChange={e => setForm(f => ({ ...f, konuAdi: e.target.value }))} style={baseStyles.select}>
+                <option value="">Genel</option>
+                {selectedBrans.konular.map((k, i) => <option key={i} value={k.name}>{k.name}</option>)}
+              </select>
+            </div>
+          )}
+          <div>
+            <label style={baseStyles.label}>Kaynak</label>
+            <input type="text" value={form.kaynak} onChange={e => setForm(f => ({ ...f, kaynak: e.target.value }))} style={baseStyles.input} placeholder="Tusdata, ÖSYM..." />
+          </div>
+          <div>
+            <label style={baseStyles.label}>Fotoğraf</label>
+            <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePhoto} style={{ ...baseStyles.input, padding: "6px 8px" }} />
+          </div>
+        </div>
+        <div style={{ marginTop: 12 }}>
+          <label style={baseStyles.label}>Not (Neden yanlış?)</label>
+          <textarea
+            value={form.not}
+            onChange={e => setForm(f => ({ ...f, not: e.target.value }))}
+            style={{ ...baseStyles.input, minHeight: 80, resize: "vertical" }}
+            placeholder="Hata nedeninizi açıklayın..."
+          />
+        </div>
+        {form.foto && (
+          <div style={{ marginTop: 8 }}>
+            <img src={form.foto} alt="Önizleme" style={{ maxWidth: 200, maxHeight: 150, borderRadius: 8, border: `1px solid ${colors.border}` }} />
+          </div>
+        )}
+        <div style={{ marginTop: 12, textAlign: "right" }}>
+          <button onClick={ekle} style={baseStyles.btn("primary")}>Ekle</button>
+        </div>
+      </div>
+
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>Hatalı Sorular ({hataliSorular.length})</div>
+        {hataliSorular.length === 0 ? (
+          <div style={{ color: colors.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>Henüz hatalı soru eklenmedi</div>
+        ) : hataliSorular.map(s => {
+          const b = tumBranslar.find(x => x.id === s.bransId);
+          const isExpanded = expandedId === s.id;
+          return (
+            <div key={s.id} style={{ padding: 12, marginBottom: 8, background: colors.inputBg, borderRadius: 8, border: `1px solid ${colors.border}` }}>
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start", cursor: "pointer" }} onClick={() => setExpandedId(isExpanded ? null : s.id)}>
+                {s.foto && (
+                  <img src={s.foto} alt="" style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 6, border: `1px solid ${colors.border}` }} />
+                )}
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ fontWeight: 600, fontSize: 13 }}>{b ? `${b.icon} ${b.name}` : s.bransId} {s.konuAdi ? ` > ${s.konuAdi}` : ""}</div>
+                    <span style={{ fontSize: 10, color: colors.textMuted }}>{formatDate(s.tarih)}</span>
+                  </div>
+                  {s.kaynak && <div style={{ fontSize: 11, color: colors.textMuted, marginTop: 2 }}>Kaynak: {s.kaynak}</div>}
+                  <div style={{ fontSize: 12, color: colors.text, marginTop: 4, whiteSpace: isExpanded ? "pre-wrap" : "nowrap", overflow: isExpanded ? "visible" : "hidden", textOverflow: "ellipsis", maxWidth: isExpanded ? "none" : 400 }}>{s.not}</div>
+                </div>
+                <button onClick={(e) => { e.stopPropagation(); sil(s.id); }} style={baseStyles.deleteBtn}>×</button>
+              </div>
+              {isExpanded && s.foto && (
+                <div style={{ marginTop: 12, textAlign: "center" }}>
+                  <img src={s.foto} alt="Soru fotoğrafı" style={{ maxWidth: "100%", maxHeight: 500, borderRadius: 8, border: `1px solid ${colors.border}` }} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // --- Analiz ---
-function Analiz({ data }) {
+function Analiz({ data, colors, baseStyles }) {
   // Brans bazli soru cozum analizi
   const bransAnaliz = useMemo(() => {
     return tumBranslar.map(b => {
@@ -1572,8 +2359,107 @@ function Analiz({ data }) {
   // Hic soru cozulmeyen branslar
   const hicCozulmeyenler = tumBranslar.filter(b => !bransAnaliz.find(a => a.id === b.id && a.topSoru > 0));
 
+  // Haftalik / Aylik rapor
+  const haftalikRapor = useMemo(() => {
+    const now = new Date();
+    const buHaftaBasi = new Date(now);
+    buHaftaBasi.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
+    buHaftaBasi.setHours(0, 0, 0, 0);
+    const gecenHaftaBasi = new Date(buHaftaBasi);
+    gecenHaftaBasi.setDate(gecenHaftaBasi.getDate() - 7);
+
+    const buHaftaStr = buHaftaBasi.toISOString().slice(0, 10);
+    const gecenHaftaStr = gecenHaftaBasi.toISOString().slice(0, 10);
+    const buHaftaSonu = new Date(buHaftaBasi);
+    buHaftaSonu.setDate(buHaftaSonu.getDate() + 7);
+    const buHaftaSonuStr = buHaftaSonu.toISOString().slice(0, 10);
+
+    const buHaftaSorular = data.soruCozumleri.filter(s => s.tarih >= buHaftaStr && s.tarih < buHaftaSonuStr);
+    const gecenHaftaSorular = data.soruCozumleri.filter(s => s.tarih >= gecenHaftaStr && s.tarih < buHaftaStr);
+
+    const buHaftaTopSoru = buHaftaSorular.reduce((s, c) => s + c.dogru + c.yanlis + (c.bos || 0), 0);
+    const gecenHaftaTopSoru = gecenHaftaSorular.reduce((s, c) => s + c.dogru + c.yanlis + (c.bos || 0), 0);
+    const buHaftaDogru = buHaftaSorular.reduce((s, c) => s + c.dogru, 0);
+    const gecenHaftaDogru = gecenHaftaSorular.reduce((s, c) => s + c.dogru, 0);
+    const buHaftaBasari = buHaftaTopSoru > 0 ? (buHaftaDogru / buHaftaTopSoru) * 100 : 0;
+    const gecenHaftaBasari = gecenHaftaTopSoru > 0 ? (gecenHaftaDogru / gecenHaftaTopSoru) * 100 : 0;
+
+    const buHaftaCalisma = data.calismaKayitlari.filter(c => c.tarih >= buHaftaStr && c.tarih < buHaftaSonuStr).reduce((s, c) => s + c.sure, 0);
+    const gecenHaftaCalisma = data.calismaKayitlari.filter(c => c.tarih >= gecenHaftaStr && c.tarih < buHaftaStr).reduce((s, c) => s + c.sure, 0);
+
+    return {
+      buHafta: { soru: buHaftaTopSoru, basari: buHaftaBasari, calisma: buHaftaCalisma },
+      gecenHafta: { soru: gecenHaftaTopSoru, basari: gecenHaftaBasari, calisma: gecenHaftaCalisma },
+    };
+  }, [data.soruCozumleri, data.calismaKayitlari]);
+
+  const aylikRapor = useMemo(() => {
+    const now = new Date();
+    const buAyBasi = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
+    const gecenAyBasi = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().slice(0, 10);
+    const buAySonu = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString().slice(0, 10);
+
+    const buAySorular = data.soruCozumleri.filter(s => s.tarih >= buAyBasi && s.tarih < buAySonu);
+    const gecenAySorular = data.soruCozumleri.filter(s => s.tarih >= gecenAyBasi && s.tarih < buAyBasi);
+
+    const buAyTopSoru = buAySorular.reduce((s, c) => s + c.dogru + c.yanlis + (c.bos || 0), 0);
+    const gecenAyTopSoru = gecenAySorular.reduce((s, c) => s + c.dogru + c.yanlis + (c.bos || 0), 0);
+    const buAyDogru = buAySorular.reduce((s, c) => s + c.dogru, 0);
+    const gecenAyDogru = gecenAySorular.reduce((s, c) => s + c.dogru, 0);
+    const buAyBasari = buAyTopSoru > 0 ? (buAyDogru / buAyTopSoru) * 100 : 0;
+    const gecenAyBasari = gecenAyTopSoru > 0 ? (gecenAyDogru / gecenAyTopSoru) * 100 : 0;
+
+    const buAyCalisma = data.calismaKayitlari.filter(c => c.tarih >= buAyBasi && c.tarih < buAySonu).reduce((s, c) => s + c.sure, 0);
+    const gecenAyCalisma = data.calismaKayitlari.filter(c => c.tarih >= gecenAyBasi && c.tarih < buAyBasi).reduce((s, c) => s + c.sure, 0);
+
+    return {
+      buAy: { soru: buAyTopSoru, basari: buAyBasari, calisma: buAyCalisma },
+      gecenAy: { soru: gecenAyTopSoru, basari: gecenAyBasari, calisma: gecenAyCalisma },
+    };
+  }, [data.soruCozumleri, data.calismaKayitlari]);
+
+  const trendArrow = (current, previous) => {
+    if (current > previous) return { icon: "\u2191", color: colors.success };
+    if (current < previous) return { icon: "\u2193", color: colors.danger };
+    return { icon: "\u2192", color: colors.textMuted };
+  };
+
+  const RaporCard = ({ title, current, previous, label }) => {
+    const soruTrend = trendArrow(current.soru, previous.soru);
+    const basariTrend = trendArrow(current.basari, previous.basari);
+    const calismaTrend = trendArrow(current.calisma, previous.calisma);
+    return (
+      <div style={baseStyles.card}>
+        <div style={baseStyles.cardTitle}>{title}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: colors.primary }}>{current.soru}</div>
+            <div style={{ fontSize: 11, color: colors.textMuted }}>Soru</div>
+            <div style={{ fontSize: 12, color: soruTrend.color, fontWeight: 600 }}>{soruTrend.icon} {previous.soru} {label}</div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: colors.success }}>%{current.basari.toFixed(0)}</div>
+            <div style={{ fontSize: 11, color: colors.textMuted }}>Başarı</div>
+            <div style={{ fontSize: 12, color: basariTrend.color, fontWeight: 600 }}>{basariTrend.icon} %{previous.basari.toFixed(0)} {label}</div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: colors.warning }}>{(current.calisma / 60).toFixed(1)} sa</div>
+            <div style={{ fontSize: 11, color: colors.textMuted }}>Çalışma</div>
+            <div style={{ fontSize: 12, color: calismaTrend.color, fontWeight: 600 }}>{calismaTrend.icon} {(previous.calisma / 60).toFixed(1)} sa {label}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
+      {/* Haftalik ve Aylik Rapor */}
+      <div style={baseStyles.grid2}>
+        <RaporCard title="Bu Hafta" current={haftalikRapor.buHafta} previous={haftalikRapor.gecenHafta} label="geçen hafta" />
+        <RaporCard title="Bu Ay" current={aylikRapor.buAy} previous={aylikRapor.gecenAy} label="geçen ay" />
+      </div>
+
       {/* Guclu/Zayif Yonler */}
       <div style={baseStyles.grid2}>
         <div style={baseStyles.card}>
@@ -1746,12 +2632,28 @@ const tabs = [
   { id: "denemeler", label: "Denemeler" },
   { id: "plan", label: "Çalışma Planı" },
   { id: "kayit", label: "Çalışma Kaydı" },
+  { id: "pomodoro", label: "Pomodoro" },
+  { id: "notlar", label: "Notlar" },
+  { id: "kartlar", label: "Kartlar" },
+  { id: "hatali", label: "Hatalı Sorular" },
   { id: "analiz", label: "Analiz" },
 ];
 
 export default function TusTakip() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [data, setDataRaw] = useState(() => loadData() || defaultData());
+  const [theme, setTheme] = useState(() => {
+    try { return localStorage.getItem(THEME_KEY) || "light"; } catch { return "light"; }
+  });
+
+  const colors = useMemo(() => getColors(theme), [theme]);
+  const baseStyles = useMemo(() => getBaseStyles(colors, theme), [colors, theme]);
+
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch { /* ignore */ }
+  };
 
   const setData = useCallback((updater) => {
     setDataRaw(prev => {
@@ -1767,12 +2669,16 @@ export default function TusTakip() {
     const d = { ...data };
     if (!d.calismaKayitlari) { d.calismaKayitlari = []; needs = true; }
     if (!d.haftalikPlan) { d.haftalikPlan = {}; needs = true; }
+    if (d.gunlukHedef === undefined) { d.gunlukHedef = 100; needs = true; }
+    if (d.pomodoroSayisi === undefined) { d.pomodoroSayisi = 0; needs = true; }
+    if (!d.notlar) { d.notlar = {}; needs = true; }
+    if (!d.flashcards) { d.flashcards = []; needs = true; }
+    if (!d.hataliSorular) { d.hataliSorular = []; needs = true; }
 
     // Migrate old brans-level konuDurumlari to subtopic level where applicable
     const kd = { ...d.konuDurumlari };
     tumBranslar.forEach(b => {
       if (b.konular && b.konular.length > 0 && kd[b.id] && kd[b.id] !== "baslanmadi") {
-        // If old brans-level status exists, propagate to all subtopics that don't have a status yet
         const oldStatus = kd[b.id];
         b.konular.forEach(k => {
           const key = `${b.id}_${k.name}`;
@@ -1781,7 +2687,6 @@ export default function TusTakip() {
             needs = true;
           }
         });
-        // Remove old brans-level key
         delete kd[b.id];
         needs = true;
       }
@@ -1816,7 +2721,12 @@ export default function TusTakip() {
               <h1 style={baseStyles.title}>TUS Takip</h1>
               <p style={baseStyles.subtitle}>Tıpta Uzmanlık Sınavı Hazırlık Takip Sistemi</p>
             </div>
-            <button onClick={resetData} style={{ ...baseStyles.btn("ghost"), fontSize: 11, opacity: 0.7, color: "#fff" }}>Sıfırla</button>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <button onClick={toggleTheme} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, padding: "4px 8px", borderRadius: 8 }} title={theme === "light" ? "Karanlık Mod" : "Aydınlık Mod"}>
+                {theme === "light" ? "\u{1F319}" : "\u2600\uFE0F"}
+              </button>
+              <button onClick={resetData} style={{ ...baseStyles.btn("ghost"), fontSize: 11, opacity: 0.7, color: "#fff" }}>Sıfırla</button>
+            </div>
           </div>
           <nav style={baseStyles.nav}>
             {tabs.map(t => (
@@ -1828,14 +2738,18 @@ export default function TusTakip() {
         </div>
       </header>
       <main style={baseStyles.main}>
-        {activeTab === "dashboard" && <Dashboard data={data} setData={setData} />}
-        {activeTab === "konular" && <KonuTakibi data={data} setData={setData} />}
-        {activeTab === "dagilim" && <SoruDagilimi />}
-        {activeTab === "sorular" && <SoruCozumu data={data} setData={setData} />}
-        {activeTab === "denemeler" && <Denemeler data={data} setData={setData} />}
-        {activeTab === "plan" && <CalismePlani data={data} setData={setData} />}
-        {activeTab === "kayit" && <CalismaKaydi data={data} setData={setData} />}
-        {activeTab === "analiz" && <Analiz data={data} />}
+        {activeTab === "dashboard" && <Dashboard data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "konular" && <KonuTakibi data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "dagilim" && <SoruDagilimi colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "sorular" && <SoruCozumu data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "denemeler" && <Denemeler data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "plan" && <CalismePlani data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "kayit" && <CalismaKaydi data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "pomodoro" && <PomodoroTimer data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "notlar" && <NotDefteri data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "kartlar" && <FlashcardTab data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "hatali" && <HataliSorular data={data} setData={setData} colors={colors} baseStyles={baseStyles} />}
+        {activeTab === "analiz" && <Analiz data={data} colors={colors} baseStyles={baseStyles} />}
       </main>
     </div>
   );
