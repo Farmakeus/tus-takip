@@ -240,7 +240,7 @@ function saveData(data) {
 function defaultData() {
   return {
     hedefPuan: 70,
-    sinavTarihi: "2026-09-13",
+    sinavTarihi: "2026-08-23",
     konuDurumlari: {},
     soruCozumleri: [],
     denemeler: [],
